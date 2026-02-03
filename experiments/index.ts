@@ -32,6 +32,15 @@ export const experiments = [
     demoComponent: () => import('./tool-001/demo')
   },
   {
+    id: 'tool-002',
+    slug: 'tool-002',
+    title: 'JSON Formatter / Minifier',
+    description: 'Format, minify, and validate JSON data with drag-and-drop support',
+    status: 'ready',
+    createdAt: '2026-02-04',
+    demoComponent: () => import('./tool-002/demo')
+  },
+  {
     id: 'weird-001',
     slug: 'weird-001',
     title: 'Gravity Reversal',
