@@ -22,5 +22,14 @@
     "description": "Fun text animations and effects",
     "status": "ready",
     "createdAt": "2026-02-03"
+  },
+  {
+    "id": "viz-001",
+    "slug": "viz-001",
+    "title": "Interactive Particle System",
+    "description": "Engaging particle visualization that reacts to mouse/touch input",
+    "status": "ready",
+    "createdAt": "2026-02-03",
+    "tags": ["viz", "interactive", "animation"]
   }
 ]
