@@ -1,9 +1,10 @@
 # Next Actions (Sandbox)
 
-## Ticket 1: Add a minimal CI placeholder ✅ READY
+## Ticket 1: Add a minimal CI placeholder 🚧 IN_PROGRESS
 
 **Priority:** P1
 **Estimated:** Small (30-60m)
+**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/1
 
 ### Acceptance Criteria
 1. Add a lightweight script under `scripts/` (e.g., `scripts/smoke.sh`) that exits 0.
