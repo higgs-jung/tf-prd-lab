@@ -76,3 +76,36 @@
 
 ### 참고
 - 빌드 에러 해결: 'use client', import 경로, TypeScript 타입
+
+---
+
+## Ticket 4: Fix Vercel deployment configuration 🆕 IN_PROGRESS
+
+**Priority:** P0 (배포 차단)
+**Estimated:** Small (30m)
+**Assignee:** worker
+
+### 목표
+Vercel 프로덕션 배포가 실패하는 문제 해결
+
+### 문제
+```
+Error: No Output Directory named "public" found after the Build completed.
+```
+
+Next.js는 `.next` 폴더에 빌드하지만 Vercel이 `public` 폴더를 찾고 있음
+
+### 구현 범위
+- `vercel.json` 생성 또는 Vercel 프로젝트 설정 수정
+- Next.js App Router 올바른 빌드 설정:
+  - Build Command: `next build`
+  - Output Directory: `.` (또는 `.next`)
+
+### Done 정의
+- [ ] vercel.json 생성 (또는 Vercel 웹에서 설정 수정)
+- [ ] 로컬 빌드 성공 확인
+- [ ] Vercel 프로덕션 배포 성공
+
+### 검증 방법
+- Vercel 배포 로그에서 "No Output Directory" 에러 사라짐
+- `/experiments/viz-001` 페이지 접근 가능
