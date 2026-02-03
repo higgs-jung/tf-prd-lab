@@ -30,5 +30,14 @@ export const experiments = [
     status: 'ready',
     createdAt: '2026-02-03',
     demoComponent: () => import('./weird-001/demo')
+  },
+  {
+    id: 'weird-002',
+    slug: 'weird-002',
+    title: 'Glitch Effect Generator',
+    description: 'Apply digital glitch effects to text with RGB split and pixel sorting',
+    status: 'ready',
+    createdAt: '2026-02-04',
+    demoComponent: () => import('./weird-002/demo')
   }
 ]
