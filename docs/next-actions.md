@@ -19,11 +19,11 @@
 
 ---
 
-## Ticket 2: Scaffold Next.js app + Vercel-ready baseline 🚧 IN_PROGRESS
+## Ticket 2: Scaffold Next.js app + Vercel-ready baseline ✅ DONE
 
 **Priority:** P1
 **Estimated:** Medium (1-2h)
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/2
+**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/2 (merged)
 
 ### Acceptance Criteria
 1. ✅ Create a Next.js (App Router + TypeScript) app at repo root.
