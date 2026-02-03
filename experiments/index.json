@@ -1,0 +1,26 @@
+[
+  {
+    "id": "experiment-1",
+    "slug": "hello-world",
+    "title": "Hello World",
+    "description": "A simple first experiment to get started",
+    "status": "ready",
+    "createdAt": "2026-02-03"
+  },
+  {
+    "id": "experiment-2",
+    "slug": "color-explorer",
+    "title": "Color Explorer",
+    "description": "Interactive color palette generator",
+    "status": "draft",
+    "createdAt": "2026-02-03"
+  },
+  {
+    "id": "experiment-3",
+    "slug": "text-animator",
+    "title": "Text Animator",
+    "description": "Fun text animations and effects",
+    "status": "ready",
+    "createdAt": "2026-02-03"
+  }
+]
