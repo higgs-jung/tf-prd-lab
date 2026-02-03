@@ -46,12 +46,12 @@
 
 ---
 
-## Ticket 3: Add viz-001 interactive particles experiment 🔄 IN_PROGRESS
+## Ticket 3: Add viz-001 interactive particles experiment ✅ DONE
 
 **Priority:** P1
 **Estimated:** Medium (1-2h)
 **Assignee:** worker
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/4
+**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/4 (merged)
 
 ### 목표
 마우스/터치 인터랙션이 가능한 파티클 애니메이션 실험 추가
@@ -64,14 +64,15 @@
 
 ### Done 정의
 - [x] 파티클 데모 컴포넌트 완성 (150개 파티클, 마우스 상호작용)
-- [ ] 모든 파일 빌드 성공 (pnpm build)
-- [ ] 태그 설정: viz, interactive, animation
+- [x] 모든 파일 빌드 성공 (pnpm build)
+- [x] 태그 설정: viz, interactive, animation
 - [x] 브랜치 생성 및 Draft PR 제출
+- [x] Judge 검토 PASS 후 머지 완료
 
 ### 검증 방법
-- 로컬에서 `pnpm build` 실행 (에러 없어야 함)
-- Vercel Preview 배포 확인
-- 데모 페이지에서 파티클 애니메이션 동작 확인
+- [x] 로컬에서 `pnpm build` 실행 (에러 없음)
+- [x] Vercel Preview 배포 확인
+- [x] 데모 페이지에서 파티클 애니메이션 동작 확인
 
 ### 참고
 - 빌드 에러 해결: 'use client', import 경로, TypeScript 타입
