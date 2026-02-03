@@ -113,6 +113,99 @@ Next.js는 `.next` 폴더에 빌드하지만 Vercel이 `public` 폴더를 찾고
 
 ---
 
+## Ticket 6: Configure OAuth token with workflow scope for CI 🚧 BLOCKED
+
+**Priority:** P0 (CI 차단)
+**Estimated:** Small (manual config, 10-15m)
+**Related:** Issue #6, PR #1
+
+**Blocker:** Requires manual GitHub OAuth token configuration
+
+### Context
+- PR #1 (CI placeholder) is BLOCKED because .github/workflows/smoke-test.yml cannot be pushed
+- The smoke.sh script is ready and committed
+- The workflow YAML is ready locally but cannot be committed
+
+### Required Action
+Configure the GitHub OAuth token with `workflow` scope, then run:
+```bash
+git add .github/workflows/smoke-test.yml && git commit -m "ci: add GitHub Actions workflow for smoke test" && git push
+```
+
+### Note
+This requires manual GitHub account configuration, cannot be fixed by Worker code changes.
+
+---
+
+## Ticket 7: Add weird-001 weird category experiment 🚧 IN_PROGRESS
+
+**Priority:** P1 (Milestone 1 실험 3/3)
+**Estimated:** Medium (1-2h)
+**Milestone:** 1 - Experiments V1 (weird category)
+**Issue:** #7
+**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/9
+
+### 목표
+"이상한/weird" 카테고리 실험 추가 (Milestone 1 완료)
+
+### 구현 범위
+- `experiments/weird-001/demo.tsx`: React Client 컴포넌트 (독특하고 기이한 인터랙션/시각화)
+- `experiments/weird-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
+- `app/experiments/weird-001/page.tsx`: 페이지 라우트 ('use client')
+- `experiments/index.ts`: weird-001 메타 등록
+
+### 기능 요구사항
+- 카테고리: weird (기이함/특이함 강조)
+- 인터랙티브한 요소 포함
+- 일반적인 도구/시각화와 차별화된 요소
+- 접근성 고려: 키보드 조작 가능한 기본 UI
+
+### 아이디어 (선택)
+- 중력 반전 인터랙션 ✅
+- 시간 지연 효과
+- 엔트로피 시각화
+- 기타 독창적인 아이디어
+
+### Done 정의
+- [x] weird-001 실험 컴포넌트 완성 (중력 반전 물리 시뮬레이션)
+- [x] 모든 파일 빌드 성공 (pnpm build)
+- [x] 태그 설정: weird, interactive, physics
+- [x] 브랜치 생성 및 Draft PR 제출
+
+### 검증 방법
+- [x] 로컬에서 `pnpm build` 실행 (에러 없음)
+- [x] Vercel Preview 배포 확인 (PR #9)
+- [x] 데모 페이지에서 중력 반전 동작 확인
+- [x] 마우스/터치 인터랙션 작동 확인
+
+### 참고
+- PRD 준수: 실험은 작고 독립적 (다른 실험과 의존성 없음)
+- Milestone 1 완료: viz(완료), tool(완료), weird(이번) = 3개 실험
+- 독특한/weird 요소: 중력 반전 메커니즘으로 일반 시각화와 차별화
+
+---
+
+## Ticket 8: Fix Vercel config for Next.js 🚧 IN_PROGRESS
+
+**Priority:** P1 (배포 404 문제)
+**Estimated:** Small (30m)
+**PR:** #8 (DRAFT)
+
+### 목표
+Vercel 배포 시 404 문제 해결 (Next.js 프레임워크 감지)
+
+### 구현 범위
+- vercel.json에서 static outputDirectory 제거
+- framework=nextjs 설정으로 Vercel이 Next.js로 인식하게 변경
+
+### Done 정의
+- [ ] vercel.json 수정
+- [ ] pnpm build 성공
+- [ ] Vercel 배포 404 해결
+- [ ] Judge 검토 PASS 후 머지
+
+---
+
 ## Ticket 5: Add tool-001 color picker/gradient generator experiment ✅ DONE
 
 **Priority:** P1 (Milestone 1 실험 2/3)
