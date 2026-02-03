@@ -81,6 +81,17 @@ export const experiments: Experiment[] = [
     category: 'weird',
     tags: ['effect', 'glitch', 'image-processing', 'art'],
     demoComponent: () => import('./weird-002/demo')
+  },
+  {
+    id: 'feature-001',
+    slug: 'feature-001',
+    title: 'Search & Filter Demo',
+    description: 'Interactive search and filter with category, tags, and sorting',
+    status: 'ready',
+    createdAt: '2026-02-04',
+    category: 'tool',
+    tags: ['utility', 'search', 'filter', 'demo'],
+    demoComponent: () => import('./feature-001/demo')
   }
 ]
 
