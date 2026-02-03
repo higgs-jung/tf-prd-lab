@@ -1,16 +1,7 @@
 import Link from "next/link";
-import experimentsData from "../../experiments/index.json";
+import { experiments } from "../../experiments/index";
 
 export default function ExperimentsPage() {
-  const experiments = experimentsData as Array<{
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    status: string;
-    createdAt: string;
-  }>;
-
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
@@ -30,9 +21,10 @@ export default function ExperimentsPage() {
 
         <div className="grid gap-4">
           {experiments.map((experiment) => (
-            <div
+            <Link
               key={experiment.id}
-              className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+              href={`/experiments/${experiment.slug}`}
+              className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow block"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -58,7 +50,7 @@ export default function ExperimentsPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
