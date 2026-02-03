@@ -1,6 +1,9 @@
 # Next Actions (Sandbox)
 
-## Ticket 1: Add a minimal CI placeholder ✅ READY
+## Ticket 1: Add a minimal CI placeholder 🔄 IN_PROGRESS
+
+**Current PR:** ticket/ci-placeholder (DRAFT, needs review)
+**Issue:** GitHub Actions workflow file missing
 
 **Priority:** P1
 **Estimated:** Small (30-60m)
