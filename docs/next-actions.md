@@ -113,11 +113,11 @@ Next.js는 `.next` 폴더에 빌드하지만 Vercel이 `public` 폴더를 찾고
 
 ---
 
-## Ticket 5: Add tool-001 color picker/gradient generator experiment 🚧 IN_PROGRESS
+## Ticket 5: Add tool-001 color picker/gradient generator experiment ✅ DONE
 
 **Priority:** P1 (Milestone 1 실험 2/3)
 **Estimated:** Medium (1-2h)
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/5
+**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/5 (merged)
 **Milestone:** 1 - Experiments V1 (tool category)
 
 ### 목표
@@ -154,3 +154,43 @@ Next.js는 `.next` 폴더에 빌드하지만 Vercel이 `public` 폴더를 찾고
 - 접근성 고려: 키보드 조작 가능한 기본 UI
 - 최대 5개 색상까지 지원
 - 빠른 프리셋 제공 (4가지 일반적인 그라데이션)
+
+---
+
+## Ticket 7: Add weird-001 weird category experiment 🚧 IN_PROGRESS
+
+**Priority:** P1 (Milestone 1 실험 3/3)
+**Estimated:** Medium (1-2h)
+**Issue:** https://github.com/higgs-ai/tf-prd-lab-20260203/issues/7
+**Milestone:** 1 - Experiments V1 (weird category)
+
+### 목표
+"이상한/weird" 카테고리 실험 추가 (Milestone 1 완료)
+
+### 구현 범위
+- `experiments/weird-001/demo.tsx`: React Client 컴포넌트 (독특하고 기이한 인터랙션/시각화)
+- `experiments/weird-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
+- `app/experiments/weird-001/page.tsx`: 페이지 라우트 ('use client')
+- `experiments/index.ts`: weird-001 메타 등록
+
+### 기능 요구사항
+- 카테고리: weird (기이함/특이함 강조)
+- 인터랙티브한 요소 포함
+- 일반적인 도구/시각화와 차별화된 요소
+- 접근성 고려: 키보드 조작 가능한 기본 UI
+
+### 아이디어 (선택)
+- 중력 반전 인터랙션
+- 시간 지연 효과
+- 엔트로피 시각화
+- 기타 독창적인 아이디어
+
+### Done 정의
+- [ ] weird-001 실험 컴포넌트 완성
+- [ ] 모든 파일 빌드 성공 (pnpm build)
+- [ ] 태그 설정: weird, interactive
+- [ ] 브랜치 생성 및 Draft PR 제출
+
+### 참고
+- PRD 준수: 실험은 작고 독립적 (다른 실험과 의존성 없음)
+- Milestone 1 완료: viz(완료), tool(완료), weird(이번) = 3개 실험
