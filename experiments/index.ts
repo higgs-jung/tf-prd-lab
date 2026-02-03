@@ -14,6 +14,15 @@ export const experiments = [
     demoComponent: () => import('./viz-001/demo')
   },
   {
+    id: 'viz-002',
+    slug: 'viz-002',
+    title: 'Mandelbrot Fractal',
+    description: 'Explore the infinite complexity of the Mandelbrot set',
+    status: 'ready',
+    createdAt: '2026-02-04',
+    demoComponent: () => import('./viz-002/demo')
+  },
+  {
     id: 'tool-001',
     slug: 'tool-001',
     title: 'Color Picker & Gradient Generator',
