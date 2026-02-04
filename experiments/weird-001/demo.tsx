@@ -12,14 +12,70 @@ interface Particle {
   angle: number
 }
 
+const COLORS = [
+  '#ff6b6b', '#4ecdc4', '#45b7d1',
+  '#96ceb4', '#ffeaa7', '#dfe6e9', '#fd79a8'
+]
+
+function initParticle(canvas: HTMLCanvasElement): Particle {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 2,
+    vy: (Math.random() - 0.5) * 2,
+    radius: Math.random() * 10 + 5,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    angle: Math.random() * Math.PI * 2
+  }
+}
+
 export default function GravityReversalDemo() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const particlesRef = useRef<Particle[]>([])
+  const animationRef = useRef<number | undefined>(undefined)
+  const mouseRef = useRef({ x: 0, y: 0, active: false })
+  const canvasSizeRef = useRef({ width: 0, height: 0 })
+  
   const [gravityReversed, setGravityReversed] = useState(false)
   const [gravityAngle, setGravityAngle] = useState(90)
   const [particleCount, setParticleCount] = useState(50)
-  const animationRef = useRef<number | undefined>(undefined)
-  const mouseRef = useRef({ x: 0, y: 0, active: false })
 
+  // Initialize canvas size
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      canvasSizeRef.current = { width: canvas.width, height: canvas.height }
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Initialize particles only when particleCount changes
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const currentCount = particlesRef.current.length
+    
+    if (currentCount < particleCount) {
+      // Add particles
+      for (let i = currentCount; i < particleCount; i++) {
+        particlesRef.current.push(initParticle(canvas))
+      }
+    } else if (currentCount > particleCount) {
+      // Remove particles
+      particlesRef.current = particlesRef.current.slice(0, particleCount)
+    }
+  }, [particleCount])
+
+  // Animation loop - runs continuously
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -27,40 +83,13 @@ export default function GravityReversalDemo() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-
-    resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-
-    // Initialize particles
-    const colors = [
-      '#ff6b6b', '#4ecdc4', '#45b7d1',
-      '#96ceb4', '#ffeaa7', '#dfe6e9', '#fd79a8'
-    ]
-
-    let particles: Particle[] = []
-
-    const initParticles = () => {
-      particles = []
+    // Initialize particles on first mount
+    if (particlesRef.current.length === 0) {
       for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
-          radius: Math.random() * 10 + 5,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          angle: Math.random() * Math.PI * 2
-        })
+        particlesRef.current.push(initParticle(canvas))
       }
     }
 
-    initParticles()
-
-    // Animation loop
     const animate = () => {
       ctx.fillStyle = 'rgba(15, 23, 42, 0.1)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -80,9 +109,9 @@ export default function GravityReversalDemo() {
       ctx.lineTo(-20, 20)
       ctx.closePath()
       ctx.fill()
+      ctx.restore()
 
       // Draw gravity direction text
-      ctx.restore()
       ctx.fillStyle = '#ffffff'
       ctx.font = '16px monospace'
       ctx.textAlign = 'center'
@@ -92,7 +121,7 @@ export default function GravityReversalDemo() {
         90
       )
 
-      particles.forEach(particle => {
+      particlesRef.current.forEach(particle => {
         // Apply gravity
         particle.vx += gx
         particle.vy += gy
@@ -103,7 +132,7 @@ export default function GravityReversalDemo() {
           const dy = mouseRef.current.y - particle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 300) {
+          if (distance < 300 && distance > 0) {
             const force = (300 - distance) / 300
             particle.vx += (dx / distance) * force * 0.5
             particle.vy += (dy / distance) * force * 0.5
@@ -190,12 +219,11 @@ export default function GravityReversalDemo() {
     animate()
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [gravityReversed, gravityAngle, particleCount])
+  }, [gravityAngle, gravityReversed])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     mouseRef.current = {
