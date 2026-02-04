@@ -1,303 +1,204 @@
-# How to Add a New Experiment
+# 실험 추가 가이드 (How to Add an Experiment)
 
-This guide explains how to add a new experiment to the TF PRD Lab sandbox.
+tf-prd-lab에 새로운 실험을 추가하는 방법을 설명합니다. 이 프로젝트는 “작고 빠른 실험”을 반복하기 위한 샌드박스이므로, **구조만 지키고 내용은 자유롭게** 구현해도 됩니다.
 
-## Prerequisites
+## 파일 구조
 
-- Node.js & pnpm installed
-- Basic knowledge of React and TypeScript
-- Understanding of the experiment structure
-
-## File Structure
-
-When adding a new experiment, you need to create/modify these files:
+실험은 보통 아래 4개 파일(최소)로 구성됩니다.
 
 ```
 experiments/
-├── {experiment-id}/
-│   ├── demo.tsx       # Main experiment component (required)
-│   └── spec.md        # Experiment specification (required)
+├── {category}-{number}/
+│   ├── demo.tsx       # 실험 핵심 로직 (React 컴포넌트)
+│   └── spec.md        # 실험 스펙 (목적/방법/제약)
 app/experiments/
-└── {experiment-id}/
-    └── page.tsx       # Route page (required)
-experiments/index.ts   # Registration (modify)
+└── {category}-{number}/
+    └── page.tsx       # 페이지 라우트 (demo import)
+experiments/index.ts   # 실험 메타데이터 등록 (수정)
 ```
 
-## Step-by-Step Guide
+## 네이밍 규칙
 
-### 1. Create Experiment Directory
+- `{category}-{number}` 형식 사용 (예: `viz-003`, `tool-002`, `weird-001`, `game-001`)
+- 카테고리는 실험 성격에 맞게 선택합니다.
+
+| 카테고리 | 설명 | 예시 |
+|---|---|---|
+| `viz` | 시각화/그래픽 | 파티클, 프랙탈, 웨이브 |
+| `tool` | 유틸리티 | 컬러피커, 포맷터, 계산기 |
+| `weird` | 실험적/기이함 | 글리치, 중력 반전, 이상한 물리 |
+| `game` | 게임 | 캐치 게임, 간단한 아케이드 |
+
+## 단계별 추가 방법
+
+### 1) 디렉토리 생성
 
 ```bash
-mkdir -p experiments/my-experiment app/experiments/my-experiment
+mkdir -p experiments/{category}-{number}
+mkdir -p app/experiments/{category}-{number}
 ```
 
-### 2. Write spec.md
+예시:
+- `experiments/viz-003`
+- `app/experiments/viz-003`
 
-Create `experiments/{experiment-id}/spec.md`:
+### 2) `spec.md` 작성
 
-```markdown
-# {experiment-id}: Experiment Title
+`experiments/{category}-{number}/spec.md`에 “의도”만 간단히 기록합니다.
 
-## Purpose
-Brief description of what this experiment demonstrates.
+```md
+# {category}-{number}: Experiment Title
 
-## Method
-Technical approach and technologies used.
+## 목적 (Purpose)
+이 실험이 무엇을 보여주려는지 1~3문장.
 
-## Input/Output
-- Input: User interactions, parameters
-- Output: Visual/audio/technical result
+## 방법 (Method)
+- 핵심 아이디어/알고리즘
+- 주요 인터랙션(마우스/키보드/터치)
 
-## Constraints
-- Client-side only (no external APIs)
-- Performance requirements
-- Accessibility notes
+## 입출력 (Input/Output)
+- Input: 사용자가 무엇을 조작하는지
+- Output: 화면/소리/상태 변화가 무엇인지
+
+## 제약 (Constraints)
+- 클라이언트 사이드만 (외부 API/키 사용 금지)
+- 성능 목표(예: 60fps) / 모바일 고려
 ```
 
-### 3. Create demo.tsx
+### 3) `demo.tsx` 작성
 
-Create `experiments/{experiment-id}/demo.tsx`:
+`experiments/{category}-{number}/demo.tsx`는 **클라이언트 컴포넌트**로 작성합니다.
 
 ```tsx
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useEffect, useRef } from 'react'
 
-export default function MyExperimentDemo() {
-  const [count, setCount] = useState(0);
+export default function ExperimentDemo() {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const animate = () => {
+      // 실험 로직 작성
+      requestAnimationFrame(animate)
+    }
+
+    animate()
+  }, [])
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Experiment</h1>
-      <button
-        onClick={() => setCount(c => c + 1)}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        Count: {count}
-      </button>
+    <div className="relative w-full h-screen bg-slate-900">
+      <canvas ref={canvasRef} className="absolute inset-0" />
     </div>
-  );
+  )
 }
 ```
 
-**Important:**
-- Always include `'use client'` at the top
-- Export default the component
-- Keep it focused and small
-- No external API calls (client-side only)
+필수 사항:
+- 파일 상단에 `'use client'`
+- `export default function` 형태로 노출
+- 브라우저 API(Canvas/WebAudio 등)를 쓰면 SSR을 끄는 쪽으로 구성
 
-### 4. Create page.tsx
+### 4) `page.tsx` 작성
 
-Create `app/experiments/{experiment-id}/page.tsx`:
+`app/experiments/{category}-{number}/page.tsx`에서 `demo.tsx`를 **dynamic import + `ssr: false`**로 로드합니다.
 
 ```tsx
-'use client';
+'use client'
 
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
 
-const MyDemo = dynamic(() => import('@/experiments/my-experiment/demo'), {
+const ExperimentDemo = dynamic(() => import('@/experiments/{category}-{number}/demo'), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center min-h-screen">
-      <div>Loading experiment...</div>
+    <div className="flex items-center justify-center min-h-screen bg-slate-900">
+      <div className="text-white/80">Loading experiment...</div>
     </div>
   ),
-});
+})
 
-export default function MyExperimentPage() {
+export default function ExperimentPage() {
   return (
     <main className="min-h-screen">
       <nav className="fixed top-4 right-4 z-10">
         <Link
           href="/experiments"
-          className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+          className="px-4 py-2 bg-slate-900/50 backdrop-blur-sm text-white rounded-lg hover:bg-slate-900/70 transition-colors"
         >
           ← Back to Experiments
         </Link>
       </nav>
 
-      <MyDemo />
+      <ExperimentDemo />
     </main>
-  );
+  )
 }
 ```
 
-### 5. Register in experiments/index.ts
+필수 사항:
+- `ssr: false`로 설정(캔버스 등 클라이언트 API 사용)
+- 로딩 상태 UI 제공
 
-Add to `experiments/index.ts`:
+### 5) `experiments/index.ts` 등록
 
-```typescript
-export const experiments = [
-  // ... existing experiments
-  {
-    id: 'my-experiment',
-    slug: 'my-experiment',
-    title: 'My Experiment Title',
-    description: 'Brief description of my experiment',
-    status: 'ready',
-    createdAt: '2026-02-04',
-    demoComponent: () => import('./my-experiment/demo'),
-  },
-];
+`experiments/index.ts`에 메타데이터를 추가합니다.
+
+```ts
+{
+  id: '{category}-{number}',
+  slug: '{category}-{number}',
+  title: 'Experiment Title',
+  description: 'Short description of the experiment',
+  status: 'ready',
+  createdAt: 'YYYY-MM-DD',
+  category: '{category}', // 'viz' | 'tool' | 'weird' | 'game'
+  tags: ['tag1', 'tag2'],
+  demoComponent: () => import('./{category}-{number}/demo'),
+}
 ```
 
-## Build Verification Checklist
+## 체크리스트 (PR 올리기 전)
 
-Before submitting your PR, verify:
+- [ ] `demo.tsx`에 `'use client'` 추가
+- [ ] `page.tsx`가 dynamic import + `ssr: false`
+- [ ] `spec.md` 작성
+- [ ] `experiments/index.ts`에 등록
+- [ ] `pnpm build` 성공
+- [ ] `/experiments` 목록에 노출 확인
+- [ ] `/experiments/{slug}` 페이지 로드 확인
+- [ ] 브라우저 콘솔 에러가 없는지 확인
 
-- [ ] `pnpm install` completes without errors
-- [ ] `pnpm build` succeeds (no TypeScript errors)
-- [ ] All files are created (demo.tsx, spec.md, page.tsx)
-- [ ] Experiment appears in `/experiments` list
-- [ ] Individual experiment page loads
-- [ ] No console errors in browser
-
-### Verification Commands
+## 빌드/로컬 확인
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Build the project
 pnpm build
-
-# Start development server (optional)
 pnpm dev
 ```
 
-Expected output after build:
-```
-✓ Generating static pages (X/X)
-○  (Static)  prerendered as static content
-```
+## 트러블슈팅
 
-## Experiment Categories
+### “Module not found”
+- import 경로가 `@/experiments/...` 형태인지 확인
+- 파일/폴더명이 `{category}-{number}`와 일치하는지 확인
 
-Choose appropriate category for your experiment:
+### Hydration mismatch / SSR 이슈
+- `page.tsx`에서 `dynamic(..., { ssr: false })`를 사용했는지 확인
+- 브라우저 전용 로직은 `demo.tsx` 내부(`useEffect`)로 이동
 
-- **viz**: Visualizations, animations, graphics (e.g., particles, fractals)
-- **tool**: Utilities, generators, helpers (e.g., color picker, JSON formatter)
-- **weird**: Unusual, experimental, artistic (e.g., glitch effects, gravity reversal)
+### 실험이 목록에 안 보임
+- `experiments/index.ts`에 등록 여부 확인
+- `demoComponent` import 경로가 올바른지 확인
 
-## Complete Minimal Template
+## 예시 실험 참고
 
-### spec.md
-
-```markdown
-# exp-XXX: My Experiment
-
-## Purpose
-One sentence description.
-
-## Method
-Brief technical approach.
-
-## Input/Output
-Input: Mouse/keyboard
-Output: Visual result
-
-## Constraints
-Client-side only. 60fps target.
-```
-
-### demo.tsx
-
-```tsx
-'use client';
-
-export default function MinimalDemo() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
-          Minimal Experiment
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Your experiment content here
-        </p>
-      </div>
-    </div>
-  );
-}
-```
-
-### page.tsx
-
-```tsx
-'use client';
-
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const Demo = dynamic(() => import('@/experiments/exp-XXX/demo'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center min-h-screen">
-      <div>Loading...</div>
-    </div>
-  ),
-});
-
-export default function Page() {
-  return (
-    <main className="min-h-screen">
-      <nav className="fixed top-4 right-4 z-10">
-        <Link href="/experiments" className="px-4 py-2 bg-gray-800 text-white rounded">
-          ← Back
-        </Link>
-      </nav>
-
-      <Demo />
-    </main>
-  );
-}
-```
-
-## PR Guidelines
-
-1. **Create branch**: `git checkout -b feature/my-experiment`
-2. **Implement**: Follow the structure above
-3. **Verify**: Run `pnpm build` successfully
-4. **Commit**: Clear commit message
-5. **Open Draft PR** with:
-   - Clear title: `feat: add my-experiment (category)`
-   - Acceptance criteria checklist
-   - Build verification notes
-
-## Troubleshooting
-
-### Build Error: "Module not found"
-- Check import path uses `@/` alias (e.g., `@/experiments/...`)
-- Verify file exists at expected location
-
-### TypeScript Errors
-- Ensure `'use client'` is at top of demo.tsx and page.tsx
-- Check `useRef` generic types if used
-
-### Experiment Not Showing in List
-- Verify registration in `experiments/index.ts`
-- Check `demoComponent` uses correct import path
-
-### Hydration Mismatch
-- Use `suppressHydrationWarning` in layout.tsx if needed
-- Ensure client-side only code is marked with `'use client'`
-
-## Example Experiments
-
-Reference these completed experiments for patterns:
-
-| ID | Category | Description |
-|----|----------|-------------|
-| viz-001 | viz | Interactive Particle System (Canvas) |
-| viz-002 | viz | Mandelbrot Fractal Visualization |
-| tool-001 | tool | Color Picker & Gradient Generator |
-| tool-002 | tool | JSON Formatter / Minifier |
-| weird-001 | weird | Gravity Reversal Physics |
-| weird-002 | weird | Glitch Effect Generator |
-
-## Questions?
-
-- Check existing experiments for reference
-- Review PRD guidelines in `docs/PRD.md`
-- Open an issue for discussion
+- `viz-001`: Interactive Particle System
+- `weird-001`: Gravity Reversal
+- `game-001`: Interactive Catch Game
