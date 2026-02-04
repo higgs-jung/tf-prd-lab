@@ -10,12 +10,23 @@ export interface Experiment {
   description: string
   status: 'ready' | 'draft'
   createdAt: string
-  category: 'viz' | 'tool' | 'weird'
+  category: 'viz' | 'tool' | 'weird' | 'game'
   tags: string[]
   demoComponent: () => Promise<any>
 }
 
 export const experiments: Experiment[] = [
+  {
+    id: 'game-001',
+    slug: 'game-001',
+    title: 'Catch Game',
+    description: 'Catch falling objects before they hit the ground. Use arrows or mouse to move.',
+    status: 'ready',
+    createdAt: '2026-02-04',
+    category: 'game',
+    tags: ['game', 'interactive', 'canvas', 'arcade'],
+    demoComponent: () => import('./game-001/demo')
+  },
   {
     id: 'viz-001',
     slug: 'viz-001',

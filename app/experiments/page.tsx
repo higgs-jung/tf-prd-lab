@@ -241,6 +241,8 @@ export default function ExperimentsPage() {
                           ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
                           : experiment.category === 'tool'
                           ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : experiment.category === 'game'
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
                           : 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200'
                       }`}
                     >
