@@ -176,7 +176,7 @@ export default function ExperimentsPage() {
                 {searchQuery && (
                   <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-sm"
                   >
-                    Search: "{searchQuery}"
+                    Search: &quot;{searchQuery}&quot;
                   </span>
                 )}
               </div>

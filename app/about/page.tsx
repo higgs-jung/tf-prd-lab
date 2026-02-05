@@ -170,7 +170,7 @@ export default function AboutPage() {
           <section className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-lg">
             <h2 className="text-2xl font-semibold mb-3">🚀 Get Started</h2>
             <p className="leading-relaxed mb-4">
-              Ready to explore? Browse our experiments to see what we're working on, 
+              Ready to explore? Browse our experiments to see what we&apos;re working on, 
               or check the project documentation for contribution guidelines.
             </p>
             <div className="flex flex-wrap gap-4">
