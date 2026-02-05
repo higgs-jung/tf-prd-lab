@@ -17,6 +17,7 @@ function clamp(value: number, min: number, max: number) {
 export default function LissajousDemo() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const mountedRef = useRef(false)
 
   const [freqA, setFreqA] = useState(3)
   const [freqB, setFreqB] = useState(2)
@@ -38,6 +39,7 @@ export default function LissajousDemo() {
     const container = containerRef.current
     const canvas = canvasRef.current
     if (!container || !canvas) return
+    mountedRef.current = true
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -63,6 +65,7 @@ export default function LissajousDemo() {
     let last = performance.now()
 
     const draw = (now: number) => {
+      if (!mountedRef.current) return
       const dt = Math.min(64, now - last)
       last = now
 
@@ -106,19 +109,22 @@ export default function LissajousDemo() {
       ctx.arc(x, y, 3.5, 0, TAU)
       ctx.fill()
 
+      if (!mountedRef.current) return
       rafRef.current = requestAnimationFrame(draw)
     }
 
     rafRef.current = requestAnimationFrame(draw)
 
     return () => {
+      mountedRef.current = false
       ro.disconnect()
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
   }, [])
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white p-6">
+    <div className="min-h-screen bg-slate-950 text-white p-6">
       <div className="max-w-6xl mx-auto">
         <header className="mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold mb-2">Lissajous Curve Playground</h1>
@@ -186,6 +192,7 @@ export default function LissajousDemo() {
                   value={phase}
                   onChange={(e) => setPhase(clamp(Number(e.target.value), 0, TAU))}
                   className="w-full accent-violet-400"
+                  aria-label="Phase shift"
                 />
               </div>
 
@@ -202,6 +209,7 @@ export default function LissajousDemo() {
                   value={trailLength}
                   onChange={(e) => setTrailLength(clampInt(Number(e.target.value), 100, 2000))}
                   className="w-full accent-emerald-400"
+                  aria-label="Trail length"
                 />
               </div>
 
@@ -223,7 +231,6 @@ export default function LissajousDemo() {
           </aside>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
-
