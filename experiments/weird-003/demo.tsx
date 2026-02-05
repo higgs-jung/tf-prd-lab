@@ -8,14 +8,17 @@ type AudioRig = {
   preGain: GainNode
   delay: DelayNode
   feedbackGain: GainNode
+  feedbackFilter: BiquadFilterNode
   outputGain: GainNode
+  limiter: DynamicsCompressorNode
 }
 
 const DELAY_MAX = 0.8
-const FEEDBACK_MAX = 0.8
+const FEEDBACK_MAX = 0.75
 const TONE_MIN = 80
 const TONE_MAX = 880
-const GAIN_MAX = 0.2
+const GAIN_MAX = 0.15
+const FILTER_CUTOFF_HZ = 2400
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
@@ -71,7 +74,9 @@ export default function AudioFeedbackDelayToyDemo() {
       rig.preGain.disconnect()
       rig.delay.disconnect()
       rig.feedbackGain.disconnect()
+      rig.feedbackFilter.disconnect()
       rig.outputGain.disconnect()
+      rig.limiter.disconnect()
     } catch {
       // ignore
     }
@@ -97,20 +102,32 @@ export default function AudioFeedbackDelayToyDemo() {
 
     const delay = ctx.createDelay(DELAY_MAX)
     const feedbackGain = ctx.createGain()
+    const feedbackFilter = ctx.createBiquadFilter()
+    feedbackFilter.type = 'lowpass'
+    feedbackFilter.frequency.value = FILTER_CUTOFF_HZ
+    feedbackFilter.Q.value = 0.707
     const outputGain = ctx.createGain()
+    const limiter = ctx.createDynamicsCompressor()
+    limiter.threshold.value = -18
+    limiter.knee.value = 0
+    limiter.ratio.value = 20
+    limiter.attack.value = 0.003
+    limiter.release.value = 0.25
 
     osc.connect(preGain)
     preGain.connect(delay)
 
     // feedback loop
     delay.connect(feedbackGain)
-    feedbackGain.connect(delay)
+    feedbackGain.connect(feedbackFilter)
+    feedbackFilter.connect(delay)
 
     // output
     delay.connect(outputGain)
-    outputGain.connect(ctx.destination)
+    outputGain.connect(limiter)
+    limiter.connect(ctx.destination)
 
-    rigRef.current = { ctx, osc, preGain, delay, feedbackGain, outputGain }
+    rigRef.current = { ctx, osc, preGain, delay, feedbackGain, feedbackFilter, outputGain, limiter }
 
     // Apply initial params (with clamps)
     const d = clamp(delaySec, 0, DELAY_MAX)
@@ -254,7 +271,7 @@ export default function AudioFeedbackDelayToyDemo() {
           </div>
 
           <div className="text-xs text-slate-400">
-            Safety: this is a feedback loop. Keep system volume low. Prefer speakers at low volume; avoid loud headphones.
+            Safety: this is a feedback loop. Output gain is clamped and a limiter is enabled, but keep system volume low.
           </div>
         </div>
       </div>
