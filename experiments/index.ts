@@ -28,6 +28,17 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./game-001/demo')
   },
   {
+    id: 'game-002',
+    slug: 'game-002',
+    title: 'Aim Trainer Mini-Game',
+    description: 'Tap (or click) targets as fast as you can in a 30-second round.',
+    status: 'ready',
+    createdAt: '2026-02-05',
+    category: 'game',
+    tags: ['game', 'aim', 'trainer', 'canvas', 'tap', 'click'],
+    demoComponent: () => import('./game-002/demo')
+  },
+  {
     id: 'viz-001',
     slug: 'viz-001',
     title: 'Interactive Particle System',
