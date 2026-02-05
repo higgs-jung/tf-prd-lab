@@ -28,4 +28,3 @@ export default function Viz003Page() {
     </main>
   )
 }
-
