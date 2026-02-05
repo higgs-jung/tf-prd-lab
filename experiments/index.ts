@@ -105,6 +105,17 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./weird-002/demo')
   },
   {
+    id: 'weird-003',
+    slug: 'weird-003',
+    title: 'Audio Feedback Delay Toy',
+    description: 'A safe WebAudio feedback + delay loop playground. Start with low volume.',
+    status: 'ready',
+    createdAt: '2026-02-05',
+    category: 'weird',
+    tags: ['audio', 'weird', 'webaudio', 'delay', 'feedback'],
+    demoComponent: () => import('./weird-003/demo')
+  },
+  {
     id: 'feature-001',
     slug: 'feature-001',
     title: 'Search & Filter Demo',
