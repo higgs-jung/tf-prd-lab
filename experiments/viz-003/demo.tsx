@@ -39,7 +39,6 @@ export default function LissajousDemo() {
     const container = containerRef.current
     const canvas = canvasRef.current
     if (!container || !canvas) return
-    mountedRef.current = true
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -58,8 +57,17 @@ export default function LissajousDemo() {
     }
 
     resize()
-    const ro = new ResizeObserver(() => resize())
-    ro.observe(container)
+    mountedRef.current = true
+
+    let ro: ResizeObserver | null = null
+    const onWindowResize = () => resize()
+
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => resize())
+      ro.observe(container)
+    } else {
+      window.addEventListener('resize', onWindowResize, { passive: true })
+    }
 
     let t = 0
     let last = performance.now()
@@ -117,7 +125,8 @@ export default function LissajousDemo() {
 
     return () => {
       mountedRef.current = false
-      ro.disconnect()
+      ro?.disconnect()
+      window.removeEventListener('resize', onWindowResize)
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
