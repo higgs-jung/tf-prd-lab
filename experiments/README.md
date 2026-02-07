@@ -29,7 +29,7 @@ Experiments are organized by category:
   - Examples: `weird-001` (Gravity Reversal), `weird-002` (Glitch Effect)
 
 - **feature-***: Platform features and capabilities
-  - Examples: `feature-001` (Search/Filter Demo)
+  - (currently not registered; keep this namespace reserved)
 
 ### Registration
 
@@ -75,7 +75,6 @@ All experiments must be registered in `index.ts`:
 | tool-002 | tool | JSON Formatter / Minifier | utility, json, formatter |
 | weird-001 | weird | Gravity Reversal | physics, interactive, chaos |
 | weird-002 | weird | Glitch Effect Generator | effect, glitch, art |
-| feature-001 | tool | Search & Filter Demo | utility, search, filter |
 
 ## Adding New Experiments
 

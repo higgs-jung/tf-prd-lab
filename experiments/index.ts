@@ -1,6 +1,6 @@
 /**
  * Auto-collected experiments
- * This file automatically imports and registers all experiments
+ * This file imports and registers experiments.
  */
 
 export interface Experiment {
@@ -15,6 +15,7 @@ export interface Experiment {
   demoComponent: () => Promise<any>
 }
 
+// NOTE: hard cap policy (po-lab): keep <=10 registered experiments.
 export const experiments: Experiment[] = [
   {
     id: 'game-001',
@@ -72,6 +73,17 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./viz-003/demo')
   },
   {
+    id: 'viz-004',
+    slug: 'viz-004',
+    title: 'Moiré Grid Warp Playground',
+    description: 'Layered line grids with a draggable warp field to explore moiré illusions.',
+    status: 'ready',
+    createdAt: '2026-02-07',
+    category: 'viz',
+    tags: ['viz', 'moire', 'canvas', 'interactive', 'warp'],
+    demoComponent: () => import('./viz-004/demo')
+  },
+  {
     id: 'tool-001',
     slug: 'tool-001',
     title: 'Color Picker & Gradient Generator',
@@ -125,22 +137,11 @@ export const experiments: Experiment[] = [
     category: 'weird',
     tags: ['audio', 'weird', 'webaudio', 'delay', 'feedback'],
     demoComponent: () => import('./weird-003/demo')
-  },
-  {
-    id: 'feature-001',
-    slug: 'feature-001',
-    title: 'Search & Filter Demo',
-    description: 'Interactive search and filter with category, tags, and sorting',
-    status: 'ready',
-    createdAt: '2026-02-04',
-    category: 'tool',
-    tags: ['utility', 'search', 'filter', 'demo'],
-    demoComponent: () => import('./feature-001/demo')
   }
 ]
 
 // Extract unique categories
-export const categories = ['all', ...Array.from(new Set(experiments.map(e => e.category)))] as const
+export const categories = ['all', ...Array.from(new Set(experiments.map((e) => e.category)))] as const
 
 // Extract unique tags
-export const allTags = Array.from(new Set(experiments.flatMap(e => e.tags)))
+export const allTags = Array.from(new Set(experiments.flatMap((e) => e.tags)))
