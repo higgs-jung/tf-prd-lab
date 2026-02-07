@@ -43,9 +43,10 @@ export default function ParticleDemo() {
           y: Math.random() * canvas.height,
           vx: (Math.random() - 0.5) * 2,
           vy: (Math.random() - 0.5) * 2,
-          radius: Math.random() * 3 + 1,
+          // Make particles more visible across devices (avoid near-invisible tiny/low-alpha dots)
+          radius: Math.random() * 4 + 2,
           color: colors[Math.floor(Math.random() * colors.length)],
-          alpha: Math.random() * 0.5 + 0.5,
+          alpha: 1,
         })
       }
 
@@ -61,9 +62,14 @@ export default function ParticleDemo() {
       // Reset state each frame (prevents state leak causing blank/too-dark canvas)
       ctx.globalAlpha = 1
 
-      // Fade background slightly for trails
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+      // Clear to solid black each frame for maximum visibility (avoid accumulating near-black haze)
+      ctx.fillStyle = '#000'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Debug marker (top-left) to confirm drawing is visible on screen
+      ctx.fillStyle = '#ffffff'
+      ctx.globalAlpha = 1
+      ctx.fillRect(0, 0, 6, 6)
 
       const particles = particlesRef.current
 
@@ -120,7 +126,8 @@ export default function ParticleDemo() {
             ctx.moveTo(newX, newY)
             ctx.lineTo(prev.x, prev.y)
             ctx.strokeStyle = p.color
-            ctx.globalAlpha = 0.2
+            ctx.globalAlpha = 0.5
+            ctx.lineWidth = 1
             ctx.stroke()
           }
         }
