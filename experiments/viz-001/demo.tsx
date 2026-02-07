@@ -16,7 +16,7 @@ export default function ParticleDemo() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [particles, setParticles] = useState<Particle[]>([])
   const animationRef = useRef<number | undefined>(undefined)
-  const mouseRef = useRef({ x: 0, y: 0 })
+  const mouseRef = useRef({ x: 0, y: 0, active: false })
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -66,15 +66,17 @@ export default function ParticleDemo() {
           let newX = particle.x + particle.vx
           let newY = particle.y + particle.vy
 
-          // Mouse interaction
-          const dx = mouseRef.current.x - newX
-          const dy = mouseRef.current.y - newY
-          const distance = Math.sqrt(dx * dx + dy * dy)
+          // Mouse interaction (guard against NaN when distance ~ 0)
+          if (mouseRef.current.active) {
+            const dx = mouseRef.current.x - newX
+            const dy = mouseRef.current.y - newY
+            const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 100) {
-            const force = (100 - distance) / 100
-            particle.vx += (dx / distance) * force * 0.5
-            particle.vy += (dy / distance) * force * 0.5
+            if (distance > 0.0001 && distance < 100) {
+              const force = (100 - distance) / 100
+              particle.vx += (dx / distance) * force * 0.5
+              particle.vy += (dy / distance) * force * 0.5
+            }
           }
 
           // Boundary collision
@@ -139,7 +141,8 @@ export default function ParticleDemo() {
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     mouseRef.current = {
       x: e.clientX,
-      y: e.clientY
+      y: e.clientY,
+      active: true
     }
   }
 
@@ -147,7 +150,8 @@ export default function ParticleDemo() {
     const touch = e.touches[0]
     mouseRef.current = {
       x: touch.clientX,
-      y: touch.clientY
+      y: touch.clientY,
+      active: true
     }
   }
 
@@ -158,6 +162,7 @@ export default function ParticleDemo() {
         className="absolute inset-0"
         onMouseMove={handleMouseMove}
         onTouchMove={handleTouchMove}
+        onMouseLeave={() => (mouseRef.current.active = false)}
       />
       <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm p-4 rounded-lg">
         <h2 className="text-white text-lg font-semibold mb-2">Interactive Particles</h2>
