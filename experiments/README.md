@@ -22,6 +22,9 @@ Experiments are organized by category:
 - **viz-***: Visualizations, animations, graphics
   - Examples: `viz-001` (Particle System), `viz-002` (Fractal)
   
+- **game-***: Small interactive games
+  - Examples: `game-001` (Catch Game), `game-002` (Aim Trainer)
+
 - **tool-***: Utilities, generators, helper tools
   - Examples: `tool-001` (Color Picker), `tool-002` (JSON Formatter)
   
@@ -29,7 +32,7 @@ Experiments are organized by category:
   - Examples: `weird-001` (Gravity Reversal), `weird-002` (Glitch Effect)
 
 - **feature-***: Platform features and capabilities
-  - (currently not registered; keep this namespace reserved)
+  - Examples: `feature-001` (Search/Filter Demo)
 
 ### Registration
 
@@ -43,7 +46,7 @@ All experiments must be registered in `index.ts`:
   description: 'Brief description',
   status: 'ready',
   createdAt: '2026-02-04',
-  category: 'viz',  // 'viz' | 'tool' | 'weird'
+  category: 'viz',  // 'viz' | 'tool' | 'weird' | 'game'
   tags: ['tag1', 'tag2'],
   demoComponent: () => import('./viz-001/demo')
 }
@@ -69,12 +72,18 @@ All experiments must be registered in `index.ts`:
 
 | ID | Category | Title | Tags |
 |----|----------|-------|------|
+| game-001 | game | Catch Game | game, interactive, canvas |
+| game-002 | game | Aim Trainer Mini-Game | game, aim, trainer |
 | viz-001 | viz | Interactive Particle System | interactive, animation, canvas |
 | viz-002 | viz | Mandelbrot Fractal | math, fractal, canvas |
+| viz-003 | viz | Lissajous Curve Playground | viz, interactive, canvas |
+| viz-004 | viz | Moiré Grid Warp Playground | viz, moire, canvas |
 | tool-001 | tool | Color Picker & Gradient | utility, color, generator |
 | tool-002 | tool | JSON Formatter / Minifier | utility, json, formatter |
 | weird-001 | weird | Gravity Reversal | physics, interactive, chaos |
 | weird-002 | weird | Glitch Effect Generator | effect, glitch, art |
+| weird-003 | weird | Audio Feedback Delay Toy | audio, weird, webaudio |
+| feature-001 | tool | Search & Filter Demo | utility, search, filter |
 
 ## Adding New Experiments
 

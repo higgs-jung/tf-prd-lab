@@ -32,6 +32,13 @@ export default function MoireWarpPlayground() {
   const [decay, setDecay] = useState(0.92)
   const [showOverlay, setShowOverlay] = useState(true)
 
+  const spacingRef = useRef(spacing)
+  const overlayRotationDegRef = useRef(overlayRotationDeg)
+  const warpStrengthRef = useRef(warpStrength)
+  const decayRef = useRef(decay)
+  const showOverlayRef = useRef(showOverlay)
+  const resetRef = useRef<(() => void) | null>(null)
+
   // A tiny displacement field on a coarse grid in normalized space.
   const field = useRef<{ w: number; h: number; dx: Float32Array; dy: Float32Array } | null>(null)
 
@@ -39,6 +46,26 @@ export default function MoireWarpPlayground() {
     () => (typeof window !== 'undefined' ? Math.max(1, Math.min(3, window.devicePixelRatio || 1)) : 1),
     []
   )
+
+  useEffect(() => {
+    spacingRef.current = spacing
+  }, [spacing])
+
+  useEffect(() => {
+    overlayRotationDegRef.current = overlayRotationDeg
+  }, [overlayRotationDeg])
+
+  useEffect(() => {
+    warpStrengthRef.current = warpStrength
+  }, [warpStrength])
+
+  useEffect(() => {
+    decayRef.current = decay
+  }, [decay])
+
+  useEffect(() => {
+    showOverlayRef.current = showOverlay
+  }, [showOverlay])
 
   useEffect(() => {
     const canvasEl = canvasRef.current
@@ -145,6 +172,8 @@ export default function MoireWarpPlayground() {
       const h = canvas.height / dpr
       const cx = w / 2
       const cy = h / 2
+      const currentSpacing = spacingRef.current
+      const currentWarpStrength = warpStrengthRef.current
 
       g.save()
       g.translate(cx, cy)
@@ -154,7 +183,7 @@ export default function MoireWarpPlayground() {
 
       const maxDim = Math.hypot(w, h)
       const half = maxDim / 2
-      const step = clamp(spacing, 8, 40)
+      const step = clamp(currentSpacing, 8, 40)
 
       g.beginPath()
       for (let t = -half; t <= half; t += step) {
@@ -171,8 +200,8 @@ export default function MoireWarpPlayground() {
           const nBy = (B.y + cy) / h
           const da = sampleField(nAx, nAy)
           const db = sampleField(nBx, nBy)
-          g.moveTo(A.x + da.x * 40 * warpStrength, A.y + da.y * 40 * warpStrength)
-          g.lineTo(B.x + db.x * 40 * warpStrength, B.y + db.y * 40 * warpStrength)
+          g.moveTo(A.x + da.x * 40 * currentWarpStrength, A.y + da.y * 40 * currentWarpStrength)
+          g.lineTo(B.x + db.x * 40 * currentWarpStrength, B.y + db.y * 40 * currentWarpStrength)
         } else {
           g.moveTo(A.x, A.y)
           g.lineTo(B.x, B.y)
@@ -190,8 +219,8 @@ export default function MoireWarpPlayground() {
           const nBy = (BV.y + cy) / h
           const da = sampleField(nAx, nAy)
           const db = sampleField(nBx, nBy)
-          g.moveTo(AV.x + da.x * 40 * warpStrength, AV.y + da.y * 40 * warpStrength)
-          g.lineTo(BV.x + db.x * 40 * warpStrength, BV.y + db.y * 40 * warpStrength)
+          g.moveTo(AV.x + da.x * 40 * currentWarpStrength, AV.y + da.y * 40 * currentWarpStrength)
+          g.lineTo(BV.x + db.x * 40 * currentWarpStrength, BV.y + db.y * 40 * currentWarpStrength)
         } else {
           g.moveTo(AV.x, AV.y)
           g.lineTo(BV.x, BV.y)
@@ -206,13 +235,16 @@ export default function MoireWarpPlayground() {
 
       const w = canvas.width / dpr
       const h = canvas.height / dpr
+      const currentDecay = decayRef.current
+      const currentShowOverlay = showOverlayRef.current
+      const currentOverlayRotationDeg = overlayRotationDegRef.current
 
       // decay field
       const f = field.current
       if (f) {
         for (let i = 0; i < f.dx.length; i++) {
-          f.dx[i] *= decay
-          f.dy[i] *= decay
+          f.dx[i] *= currentDecay
+          f.dy[i] *= currentDecay
         }
       }
 
@@ -224,8 +256,8 @@ export default function MoireWarpPlayground() {
       drawGrid(0, 'rgba(148, 163, 184, 0.55)', false)
 
       // overlay grid (rotated + warped)
-      if (showOverlay) {
-        const rotRad = (overlayRotationDeg * Math.PI) / 180
+      if (currentShowOverlay) {
+        const rotRad = (currentOverlayRotationDeg * Math.PI) / 180
         drawGrid(rotRad, 'rgba(56, 189, 248, 0.60)', true)
       }
 
@@ -267,9 +299,9 @@ export default function MoireWarpPlayground() {
 
     function onPointerUp(e: PointerEvent) {
       pointer.down = false
-      try {
+      if (canvas.hasPointerCapture(e.pointerId)) {
         canvas.releasePointerCapture(e.pointerId)
-      } catch {}
+      }
     }
 
     function reset() {
@@ -279,7 +311,7 @@ export default function MoireWarpPlayground() {
       f.dy.fill(0)
     }
 
-    ;(window as any).__viz004_reset = reset
+    resetRef.current = reset
 
     canvas.addEventListener('pointerdown', onPointerDown)
     canvas.addEventListener('pointermove', onPointerMove)
@@ -296,8 +328,9 @@ export default function MoireWarpPlayground() {
       canvas.removeEventListener('pointermove', onPointerMove)
       canvas.removeEventListener('pointerup', onPointerUp)
       canvas.removeEventListener('pointercancel', onPointerUp)
+      resetRef.current = null
     }
-  }, [dpr, spacing, overlayRotationDeg, warpStrength, decay, showOverlay])
+  }, [dpr])
 
   return (
     <div ref={containerRef} className="relative w-full h-[100svh] bg-slate-950 text-white overflow-hidden">
@@ -379,7 +412,7 @@ export default function MoireWarpPlayground() {
             <button
               className="flex-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 px-3 py-2 text-sm"
               onClick={() => {
-                ;(window as any).__viz004_reset?.()
+                resetRef.current?.()
               }}
             >
               Reset warp
@@ -391,7 +424,7 @@ export default function MoireWarpPlayground() {
                 setOverlayRotationDeg(8)
                 setWarpStrength(1)
                 setDecay(0.92)
-                ;(window as any).__viz004_reset?.()
+                resetRef.current?.()
               }}
             >
               Defaults
@@ -400,7 +433,7 @@ export default function MoireWarpPlayground() {
         </div>
       </div>
 
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      <canvas ref={canvasRef} className="absolute inset-0 select-none touch-none" />
     </div>
   )
 }
