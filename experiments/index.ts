@@ -84,6 +84,17 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./viz-004/demo')
   },
   {
+    id: 'viz-005',
+    slug: 'viz-005',
+    title: 'Lissajous Playground',
+    description: 'Tune frequency and phase to explore dynamic Lissajous curves in real time.',
+    status: 'ready',
+    createdAt: '2026-02-09',
+    category: 'viz',
+    tags: ['viz', 'interactive', 'math', 'lissajous', 'svg'],
+    demoComponent: () => import('./viz-005/demo')
+  },
+  {
     id: 'tool-001',
     slug: 'tool-001',
     title: 'Color Picker & Gradient Generator',
