@@ -84,6 +84,17 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./viz-004/demo')
   },
   {
+    id: 'viz-005',
+    slug: 'viz-005',
+    title: 'Lissajous Playground',
+    description: 'Tune frequency and phase to explore dynamic Lissajous curves in real time.',
+    status: 'ready',
+    createdAt: '2026-02-09',
+    category: 'viz',
+    tags: ['viz', 'interactive', 'math', 'lissajous', 'svg'],
+    demoComponent: () => import('./viz-005/demo')
+  },
+  {
     id: 'tool-001',
     slug: 'tool-001',
     title: 'Color Picker & Gradient Generator',
@@ -104,28 +115,6 @@ export const experiments: Experiment[] = [
     category: 'tool',
     tags: ['utility', 'json', 'formatter', 'developer'],
     demoComponent: () => import('./tool-002/demo')
-  },
-  {
-    id: 'weird-001',
-    slug: 'weird-001',
-    title: 'Gravity Reversal',
-    description: 'Gravity follows your movement - reverse it for chaos',
-    status: 'ready',
-    createdAt: '2026-02-03',
-    category: 'weird',
-    tags: ['physics', 'interactive', 'simulation', 'chaos'],
-    demoComponent: () => import('./weird-001/demo')
-  },
-  {
-    id: 'weird-002',
-    slug: 'weird-002',
-    title: 'Glitch Effect Generator',
-    description: 'Apply digital glitch effects to text with RGB split and pixel sorting',
-    status: 'ready',
-    createdAt: '2026-02-04',
-    category: 'weird',
-    tags: ['effect', 'glitch', 'image-processing', 'art'],
-    demoComponent: () => import('./weird-002/demo')
   },
   {
     id: 'weird-003',
