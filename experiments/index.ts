@@ -117,28 +117,6 @@ export const experiments: Experiment[] = [
     demoComponent: () => import('./tool-002/demo')
   },
   {
-    id: 'weird-001',
-    slug: 'weird-001',
-    title: 'Gravity Reversal',
-    description: 'Gravity follows your movement - reverse it for chaos',
-    status: 'ready',
-    createdAt: '2026-02-03',
-    category: 'weird',
-    tags: ['physics', 'interactive', 'simulation', 'chaos'],
-    demoComponent: () => import('./weird-001/demo')
-  },
-  {
-    id: 'weird-002',
-    slug: 'weird-002',
-    title: 'Glitch Effect Generator',
-    description: 'Apply digital glitch effects to text with RGB split and pixel sorting',
-    status: 'ready',
-    createdAt: '2026-02-04',
-    category: 'weird',
-    tags: ['effect', 'glitch', 'image-processing', 'art'],
-    demoComponent: () => import('./weird-002/demo')
-  },
-  {
     id: 'weird-003',
     slug: 'weird-003',
     title: 'Audio Feedback Delay Toy',
