@@ -1,304 +1,200 @@
 'use client'
 
-import Link from "next/link";
-import { useState, useMemo } from "react";
-import { experiments, categories, allTags } from "../../experiments/index";
+import Link from 'next/link'
+import { useDeferredValue, useMemo, useState } from 'react'
+import { allTags, experiments } from '../../experiments/index'
 
 export default function ExperimentsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('')
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+
+  const deferredSearch = useDeferredValue(searchInput)
+
+  const normalizedExperiments = useMemo(
+    () =>
+      experiments.map((experiment) => ({
+        ...experiment,
+        searchable: `${experiment.title} ${experiment.slug}`.toLowerCase(),
+      })),
+    []
+  )
 
   const filteredExperiments = useMemo(() => {
-    return experiments.filter(exp => {
-      // Category filter
-      if (selectedCategory !== 'all' && exp.category !== selectedCategory) {
-        return false;
-      }
+    const query = deferredSearch.trim().toLowerCase()
 
-      // Tag filter
-      if (selectedTags.length > 0 && !selectedTags.some(tag => exp.tags.includes(tag))) {
-        return false;
-      }
+    return normalizedExperiments.filter((experiment) => {
+      const matchesQuery = query.length === 0 || experiment.searchable.includes(query)
+      const matchesTags =
+        selectedTags.length === 0 || selectedTags.every((tag) => experiment.tags.includes(tag))
 
-      // Search filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesTitle = exp.title.toLowerCase().includes(query);
-        const matchesDescription = exp.description.toLowerCase().includes(query);
-        const matchesTags = exp.tags.some(tag => tag.toLowerCase().includes(query));
-        if (!matchesTitle && !matchesDescription && !matchesTags) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }, [selectedCategory, selectedTags, searchQuery]);
+      return matchesQuery && matchesTags
+    })
+  }, [deferredSearch, normalizedExperiments, selectedTags])
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
-  };
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
+    )
+  }
 
   const clearFilters = () => {
-    setSelectedCategory('all');
-    setSelectedTags([]);
-    setSearchQuery('');
-  };
+    setSearchInput('')
+    setSelectedTags([])
+  }
 
-  const hasActiveFilters = selectedCategory !== 'all' || selectedTags.length > 0 || searchQuery !== '';
+  const hasActiveFilters = searchInput.trim().length > 0 || selectedTags.length > 0
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
-        <nav className="mb-8">
-          <Link
-            href="/"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
-          >
+    <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto w-full max-w-5xl">
+        <nav className="mb-6 sm:mb-8">
+          <Link href="/" className="text-blue-600 hover:underline dark:text-blue-400">
             ← Back to Home
           </Link>
         </nav>
 
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">Experiments</h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Explore {filteredExperiments.length} of {experiments.length} experiments
-            </p>
-          </div>
+        <section className="mb-6 sm:mb-8">
+          <h1 className="text-3xl font-bold sm:text-4xl">Experiments</h1>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+            Showing {filteredExperiments.length} of {experiments.length}
+          </p>
+        </section>
 
-          {/* Search */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search experiments..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full lg:w-80 px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <section className="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:mb-8 sm:p-5">
+          <div className="space-y-4">
+            <div className="relative">
+              <label htmlFor="experiment-search" className="mb-2 block text-sm font-medium">
+                Quick search (title + slug)
+              </label>
+              <input
+                id="experiment-search"
+                type="text"
+                placeholder="e.g. lissajous, viz-005"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm text-gray-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
               />
-            </svg>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="mb-8 space-y-4">
-          {/* Category Filter */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-              Category
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-lg font-medium capitalize transition-colors ${
-                    selectedCategory === cat
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {cat}
-                  {cat !== 'all' && (
-                    <span className="ml-2 text-xs opacity-75">
-                      ({experiments.filter(e => e.category === cat).length})
-                    </span>
-                  )}
-                </button>
-              ))}
+              <svg
+                className="pointer-events-none absolute left-3 top-[42px] h-4 w-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-4.35-4.35m1.6-5.15a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
             </div>
-          </div>
 
-          {/* Tag Filter */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-              Tags
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {allTags.map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => toggleTag(tag)}
-                  className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                    selectedTags.includes(tag)
-                      ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-2 border-blue-500'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-2 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
+            <div>
+              <p className="mb-2 text-sm font-medium">Filter tags (AND)</p>
+              <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+                {allTags.map((tag) => {
+                  const selected = selectedTags.includes(tag)
 
-          {/* Active Filters & Clear */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-4 pt-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm text-gray-500">Active filters:</span>
-                {selectedCategory !== 'all' && (
-                  <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-sm"
-                  >
-                    Category: {selectedCategory}
-                  </span>
-                )}
-                {selectedTags.map(tag => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded text-sm flex items-center gap-1"
-                  >
-                    {tag}
+                  return (
                     <button
+                      key={tag}
                       onClick={() => toggleTag(tag)}
-                      className="hover:text-green-600"
+                      className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
+                        selected
+                          ? 'border-blue-500 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+                          : 'border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                      }`}
+                      aria-pressed={selected}
                     >
-                      ×
+                      {tag}
                     </button>
-                  </span>
-                ))}
-                {searchQuery && (
-                  <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-sm"
-                  >
-                    Search: &quot;{searchQuery}&quot;
-                  </span>
-                )}
+                  )
+                })}
               </div>
+            </div>
+
+            {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-sm text-red-600 hover:text-red-800 underline"
+                className="inline-flex w-fit items-center rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
               >
-                Clear all
+                Clear search & tags
               </button>
-            </div>
-          )}
-        </div>
-
-        {/* Empty State */}
-        {filteredExperiments.length === 0 && (
-          <div className="text-center py-16 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-            <svg
-              className="w-16 h-16 mx-auto text-gray-400 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              No experiments found
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">
-              Try adjusting your filters or search query
-            </p>
-            <button
-              onClick={clearFilters}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Clear Filters
-            </button>
+            )}
           </div>
-        )}
+        </section>
 
-        {/* Experiments Grid */}
-        <div className="grid gap-4">
-          {filteredExperiments.map((experiment) => (
-            <Link
-              key={experiment.id}
-              href={`/experiments/${experiment.slug}`}
-              className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow block"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-2xl font-semibold">
-                      {experiment.title}
-                    </h2>
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium uppercase ${
-                        experiment.category === 'viz'
-                          ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
-                          : experiment.category === 'tool'
-                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                          : experiment.category === 'game'
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
-                          : 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200'
-                      }`}
-                    >
-                      {experiment.category}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-3">
-                    {experiment.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {experiment.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-sm"
-                      >
-                        {tag}
+        {filteredExperiments.length === 0 ? (
+          <section className="rounded-xl border border-dashed border-gray-300 p-8 text-center dark:border-gray-700">
+            <h2 className="text-lg font-semibold">No matching experiments</h2>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              Try a different keyword or remove one of the selected tags.
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+              >
+                Reset filters
+              </button>
+            )}
+          </section>
+        ) : (
+          <section className="grid gap-4">
+            {filteredExperiments.map((experiment) => (
+              <Link
+                key={experiment.id}
+                href={`/experiments/${experiment.slug}`}
+                className="block rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-900 sm:p-5"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <h2 className="text-xl font-semibold sm:text-2xl">{experiment.title}</h2>
+                      <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium uppercase text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        {experiment.category}
                       </span>
-                    ))}
+                    </div>
+                    <p className="mb-3 text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+                      {experiment.description}
+                    </p>
+
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {experiment.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
+                      <span>{experiment.slug}</span>
+                      <span>•</span>
+                      <span>{experiment.createdAt}</span>
+                      <span>•</span>
+                      <span>{experiment.status}</span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-4 text-sm">
-                    <span
-                      className={`px-2 py-1 rounded-full ${
-                        experiment.status === "ready"
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                      }`}
-                    >
-                      {experiment.status}
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      {experiment.createdAt}
-                    </span>
-                  </div>
+                  <svg
+                    className="mt-1 h-5 w-5 shrink-0 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-
-                <svg
-                  className="w-6 h-6 text-gray-400 flex-shrink-0 ml-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </section>
+        )}
       </div>
     </main>
-  );
+  )
 }
