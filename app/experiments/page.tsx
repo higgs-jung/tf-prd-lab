@@ -1,14 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { useDeferredValue, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { experiments } from '../../experiments/index'
 
 export default function ExperimentsPage() {
   const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
-  const deferredSearch = useDeferredValue(searchInput)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+    }, 120)
+
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const normalizedExperiments = useMemo(
     () =>
@@ -32,7 +39,7 @@ export default function ExperimentsPage() {
   }, [])
 
   const filteredExperiments = useMemo(() => {
-    const query = deferredSearch.trim().toLowerCase()
+    const query = debouncedSearch.trim().toLowerCase()
 
     return normalizedExperiments.filter((experiment) => {
       const matchesQuery = query.length === 0 || experiment.searchable.includes(query)
@@ -43,7 +50,7 @@ export default function ExperimentsPage() {
 
       return matchesQuery && matchesTags
     })
-  }, [deferredSearch, normalizedExperiments, selectedTags])
+  }, [debouncedSearch, normalizedExperiments, selectedTags])
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
