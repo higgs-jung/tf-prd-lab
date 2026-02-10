@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+import EmptyState from '@/components/EmptyState'
 import { experiments } from '../../experiments/index'
 
 export default function ExperimentsPage() {
@@ -199,20 +200,15 @@ export default function ExperimentsPage() {
         </section>
 
         {filteredExperiments.length === 0 ? (
-          <section className="rounded-xl border border-dashed border-gray-300 p-8 text-center dark:border-gray-700">
-            <h2 className="text-lg font-semibold">No matching experiments</h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Try a different keyword or remove one of the selected tags.
-            </p>
-            {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-              >
-                Reset filters
-              </button>
-            )}
-          </section>
+          <EmptyState
+            title={experiments.length === 0 ? 'No experiments yet' : 'No matching experiments'}
+            description={
+              experiments.length === 0
+                ? 'There are no experiments in the catalog yet. Add one to get started.'
+                : 'Try a different keyword or remove one of the selected tags.'
+            }
+            action={hasActiveFilters ? { label: 'Reset filters', onClick: clearFilters } : undefined}
+          />
         ) : (
           <section className="grid gap-4">
             {filteredExperiments.map((experiment) => (
