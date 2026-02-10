@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useDeferredValue, useMemo, useState } from 'react'
-import { allTags, experiments } from '../../experiments/index'
+import { experiments } from '../../experiments/index'
 
 export default function ExperimentsPage() {
   const [searchInput, setSearchInput] = useState('')
@@ -19,11 +19,25 @@ export default function ExperimentsPage() {
     []
   )
 
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+
+    experiments.forEach((experiment) => {
+      experiment.tags.forEach((tag) => {
+        counts.set(tag, (counts.get(tag) ?? 0) + 1)
+      })
+    })
+
+    return Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]))
+  }, [])
+
   const filteredExperiments = useMemo(() => {
     const query = deferredSearch.trim().toLowerCase()
 
     return normalizedExperiments.filter((experiment) => {
       const matchesQuery = query.length === 0 || experiment.searchable.includes(query)
+      // Multi-tag behavior is AND on purpose: users can narrow to experiments
+      // that include every selected tag.
       const matchesTags =
         selectedTags.length === 0 || selectedTags.every((tag) => experiment.tags.includes(tag))
 
@@ -93,7 +107,7 @@ export default function ExperimentsPage() {
             <div>
               <p className="mb-2 text-sm font-medium">Filter tags (AND)</p>
               <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
-                {allTags.map((tag) => {
+                {tagCounts.map(([tag, count]) => {
                   const selected = selectedTags.includes(tag)
 
                   return (
@@ -106,8 +120,10 @@ export default function ExperimentsPage() {
                           : 'border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                       aria-pressed={selected}
+                      aria-label={`${tag} tag (${count} experiments)`}
                     >
                       {tag}
+                      <span className="ml-1 opacity-75">({count})</span>
                     </button>
                   )
                 })}
