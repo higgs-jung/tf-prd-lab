@@ -38,6 +38,55 @@ export default function ExperimentsPage() {
     return Array.from(counts.entries()).sort((a, b) => a[0].localeCompare(b[0]))
   }, [])
 
+  const knownTags = useMemo(() => new Set(tagCounts.map(([tag]) => tag)), [tagCounts])
+
+  useEffect(() => {
+    const applyStateFromUrl = () => {
+      const params = new URLSearchParams(window.location.search)
+      const queryFromUrl = params.get('q') ?? ''
+      const tagsFromUrl = Array.from(
+        new Set(params.getAll('tag').filter((tag) => knownTags.has(tag)))
+      )
+
+      setSearchInput(queryFromUrl)
+      setDebouncedSearch(queryFromUrl)
+      setSelectedTags(tagsFromUrl)
+    }
+
+    applyStateFromUrl()
+    window.addEventListener('popstate', applyStateFromUrl)
+
+    return () => window.removeEventListener('popstate', applyStateFromUrl)
+  }, [knownTags])
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams()
+    const query = debouncedSearch.trim()
+
+    if (query.length > 0) {
+      nextParams.set('q', query)
+    }
+
+    selectedTags.forEach((tag) => {
+      nextParams.append('tag', tag)
+    })
+
+    const nextQuery = nextParams.toString()
+    const currentQuery = window.location.search.startsWith('?')
+      ? window.location.search.slice(1)
+      : window.location.search
+
+    if (nextQuery === currentQuery) {
+      return
+    }
+
+    const nextUrl = nextQuery.length > 0
+      ? `${window.location.pathname}?${nextQuery}`
+      : window.location.pathname
+
+    window.history.pushState(null, '', nextUrl)
+  }, [debouncedSearch, selectedTags])
+
   const filteredExperiments = useMemo(() => {
     const query = debouncedSearch.trim().toLowerCase()
 
@@ -60,6 +109,7 @@ export default function ExperimentsPage() {
 
   const clearFilters = () => {
     setSearchInput('')
+    setDebouncedSearch('')
     setSelectedTags([])
   }
 
