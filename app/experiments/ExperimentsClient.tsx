@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { experiments } from '../../experiments/index'
 
 const SEARCH_PARAM = 'q'
@@ -36,6 +36,7 @@ export default function ExperimentsPage() {
 
   const [searchInput, setSearchInput] = useState(urlSearchInput)
   const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
+  const updateModeRef = useRef<'push' | 'replace'>('push')
 
   const deferredSearch = useDeferredValue(searchInput)
 
@@ -62,7 +63,15 @@ export default function ExperimentsPage() {
     const normalizedSelectedTags = normalizeTags(selectedTags)
     const trimmedSearch = searchInput.trim()
 
-    if (trimmedSearch === urlSearchInput && areEqualArrays(normalizedSelectedTags, urlSelectedTags)) {
+    const currentSearch = searchParams.get(SEARCH_PARAM) ?? ''
+    const currentTags = normalizeTags(
+      searchParams
+        .getAll(TAG_PARAM)
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0 && validTags.has(tag))
+    )
+
+    if (trimmedSearch === currentSearch && areEqualArrays(normalizedSelectedTags, currentTags)) {
       return
     }
 
@@ -80,8 +89,14 @@ export default function ExperimentsPage() {
     const queryString = nextParams.toString()
     const nextUrl = queryString.length > 0 ? `${pathname}?${queryString}` : pathname
 
-    router.push(nextUrl, { scroll: false })
-  }, [pathname, router, searchInput, searchParams, selectedTags, urlSearchInput, urlSelectedTags])
+    if (updateModeRef.current === 'replace') {
+      router.replace(nextUrl, { scroll: false })
+    } else {
+      router.push(nextUrl, { scroll: false })
+    }
+
+    updateModeRef.current = 'push'
+  }, [pathname, router, searchInput, searchParams, selectedTags, validTags])
 
   const tagCounts = useMemo(() => {
     const counts = new Map<string, number>()
@@ -110,12 +125,14 @@ export default function ExperimentsPage() {
   }, [deferredSearch, normalizedExperiments, selectedTags])
 
   const toggleTag = (tag: string) => {
+    updateModeRef.current = 'push'
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
     )
   }
 
   const clearFilters = () => {
+    updateModeRef.current = 'push'
     setSearchInput('')
     setSelectedTags([])
   }
@@ -149,7 +166,10 @@ export default function ExperimentsPage() {
                 type="text"
                 placeholder="e.g. lissajous, viz-005"
                 value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
+                onChange={(event) => {
+                  updateModeRef.current = 'replace'
+                  setSearchInput(event.target.value)
+                }}
                 className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-3 text-sm text-gray-900 outline-none ring-blue-500 transition focus:ring-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
               />
               <svg
