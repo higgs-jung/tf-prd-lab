@@ -13,6 +13,27 @@ type ExperimentPageActionsProps = {
 
 const SUCCESS_MESSAGE = 'Link copied'
 const FAILURE_MESSAGE = 'Couldn’t copy — long-press to copy'
+const SEARCH_PARAM = 'q'
+const TAG_PARAM = 'tag'
+
+function buildExperimentsBackHref(queryString: string): string {
+  const sourceParams = new URLSearchParams(queryString)
+  const nextParams = new URLSearchParams()
+
+  const query = sourceParams.get(SEARCH_PARAM)?.trim()
+  if (query && query.length > 0) {
+    nextParams.set(SEARCH_PARAM, query)
+  }
+
+  sourceParams
+    .getAll(TAG_PARAM)
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
+    .forEach((tag) => nextParams.append(TAG_PARAM, tag))
+
+  const nextQueryString = nextParams.toString()
+  return nextQueryString.length > 0 ? `/experiments?${nextQueryString}` : '/experiments'
+}
 
 async function copyLink(value: string): Promise<boolean> {
   if (
@@ -61,7 +82,16 @@ export function ExperimentPageActions({
   copyClassName = 'px-4 py-2 bg-black/50 backdrop-blur-sm text-white rounded-lg hover:bg-black/70 transition-colors',
 }: ExperimentPageActionsProps) {
   const [toastState, setToastState] = useState<ToastState>(null)
+  const [backHref, setBackHref] = useState('/experiments')
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    setBackHref(buildExperimentsBackHref(window.location.search))
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -97,7 +127,7 @@ export function ExperimentPageActions({
   return (
     <>
       <nav className={className}>
-        <Link href="/experiments" className={backClassName}>
+        <Link href={backHref} className={backClassName}>
           ← Back to Experiments
         </Link>
         <button type="button" onClick={handleCopyLink} className={copyClassName} aria-label="Copy link">
