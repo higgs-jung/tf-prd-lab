@@ -80,7 +80,7 @@ export default function ExperimentsPage() {
     const queryString = nextParams.toString()
     const nextUrl = queryString.length > 0 ? `${pathname}?${queryString}` : pathname
 
-    router.replace(nextUrl, { scroll: false })
+    router.push(nextUrl, { scroll: false })
   }, [pathname, router, searchInput, searchParams, selectedTags, urlSearchInput, urlSelectedTags])
 
   const tagCounts = useMemo(() => {
