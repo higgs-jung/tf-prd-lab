@@ -20,20 +20,6 @@ export default function ExperimentsPage() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const [searchInput, setSearchInput] = useState('')
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-
-  const deferredSearch = useDeferredValue(searchInput)
-
-  const normalizedExperiments = useMemo(
-    () =>
-      experiments.map((experiment) => ({
-        ...experiment,
-        searchable: `${experiment.title} ${experiment.slug}`.toLowerCase(),
-      })),
-    []
-  )
-
   const validTags = useMemo(() => new Set(experiments.flatMap((experiment) => experiment.tags)), [])
 
   const urlSearchInput = useMemo(() => searchParams.get(SEARCH_PARAM) ?? '', [searchParams])
@@ -46,6 +32,20 @@ export default function ExperimentsPage() {
           .filter((tag) => tag.length > 0 && validTags.has(tag))
       ),
     [searchParams, validTags]
+  )
+
+  const [searchInput, setSearchInput] = useState(urlSearchInput)
+  const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
+
+  const deferredSearch = useDeferredValue(searchInput)
+
+  const normalizedExperiments = useMemo(
+    () =>
+      experiments.map((experiment) => ({
+        ...experiment,
+        searchable: `${experiment.title} ${experiment.slug}`.toLowerCase(),
+      })),
+    []
   )
 
   useEffect(() => {
