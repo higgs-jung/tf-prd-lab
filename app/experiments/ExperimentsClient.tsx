@@ -4,24 +4,14 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { experiments } from '../../experiments/index'
-
-const SEARCH_PARAM = 'q'
-const TAGS_PARAM = 'tags'
-const LEGACY_TAG_PARAM = 'tag'
-
-const normalizeTags = (tags: string[]) => Array.from(new Set(tags)).sort((a, b) => a.localeCompare(b))
-
-const parseTagsFromParams = (params: URLSearchParams, validTags: Set<string>) =>
-  normalizeTags(
-    [
-      ...params
-        .getAll(TAGS_PARAM)
-        .flatMap((value) => value.split(',')),
-      ...params.getAll(LEGACY_TAG_PARAM),
-    ]
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0 && validTags.has(tag))
-  )
+import {
+  SEARCH_PARAM,
+  TAGS_PARAM,
+  LEGACY_TAG_PARAM,
+  buildExperimentsListQuery,
+  normalizeTags,
+  parseTagsFromParams,
+} from '@/lib/experimentsQuery'
 
 const areEqualArrays = (a: string[], b: string[]) => {
   if (a.length !== b.length) return false
@@ -43,7 +33,7 @@ export default function ExperimentsPage() {
 
   const [searchInput, setSearchInput] = useState(urlSearchInput)
   const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
-  const updateModeRef = useRef<'push' | 'replace'>('push')
+  const updateModeRef = useRef<'push' | 'replace'>('replace')
   const lastTagInteractionAtRef = useRef(0)
 
   const deferredSearch = useDeferredValue(searchInput)
@@ -92,7 +82,7 @@ export default function ExperimentsPage() {
       nextParams.set(TAGS_PARAM, normalizedSelectedTags.join(','))
     }
 
-    const queryString = nextParams.toString()
+    const queryString = buildExperimentsListQuery(nextParams, validTags)
     const nextUrl = queryString.length > 0 ? `${pathname}?${queryString}` : pathname
 
     if (updateModeRef.current === 'replace') {
