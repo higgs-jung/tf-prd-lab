@@ -6,9 +6,22 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { experiments } from '../../experiments/index'
 
 const SEARCH_PARAM = 'q'
-const TAG_PARAM = 'tag'
+const TAGS_PARAM = 'tags'
+const LEGACY_TAG_PARAM = 'tag'
 
 const normalizeTags = (tags: string[]) => Array.from(new Set(tags)).sort((a, b) => a.localeCompare(b))
+
+const parseTagsFromParams = (params: URLSearchParams, validTags: Set<string>) =>
+  normalizeTags(
+    [
+      ...params
+        .getAll(TAGS_PARAM)
+        .flatMap((value) => value.split(',')),
+      ...params.getAll(LEGACY_TAG_PARAM),
+    ]
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0 && validTags.has(tag))
+  )
 
 const areEqualArrays = (a: string[], b: string[]) => {
   if (a.length !== b.length) return false
@@ -24,13 +37,7 @@ export default function ExperimentsPage() {
 
   const urlSearchInput = useMemo(() => searchParams.get(SEARCH_PARAM) ?? '', [searchParams])
   const urlSelectedTags = useMemo(
-    () =>
-      normalizeTags(
-        searchParams
-          .getAll(TAG_PARAM)
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0 && validTags.has(tag))
-      ),
+    () => parseTagsFromParams(searchParams, validTags),
     [searchParams, validTags]
   )
 
@@ -65,12 +72,7 @@ export default function ExperimentsPage() {
     const trimmedSearch = searchInput.trim()
 
     const currentSearch = searchParams.get(SEARCH_PARAM) ?? ''
-    const currentTags = normalizeTags(
-      searchParams
-        .getAll(TAG_PARAM)
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0 && validTags.has(tag))
-    )
+    const currentTags = parseTagsFromParams(searchParams, validTags)
 
     if (trimmedSearch === currentSearch && areEqualArrays(normalizedSelectedTags, currentTags)) {
       return
@@ -79,13 +81,16 @@ export default function ExperimentsPage() {
     const nextParams = new URLSearchParams(searchParams.toString())
 
     nextParams.delete(SEARCH_PARAM)
-    nextParams.delete(TAG_PARAM)
+    nextParams.delete(TAGS_PARAM)
+    nextParams.delete(LEGACY_TAG_PARAM)
 
     if (trimmedSearch.length > 0) {
       nextParams.set(SEARCH_PARAM, trimmedSearch)
     }
 
-    normalizedSelectedTags.forEach((tag) => nextParams.append(TAG_PARAM, tag))
+    if (normalizedSelectedTags.length > 0) {
+      nextParams.set(TAGS_PARAM, normalizedSelectedTags.join(','))
+    }
 
     const queryString = nextParams.toString()
     const nextUrl = queryString.length > 0 ? `${pathname}?${queryString}` : pathname
