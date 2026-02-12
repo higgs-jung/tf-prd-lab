@@ -14,7 +14,8 @@ type ExperimentPageActionsProps = {
 const SUCCESS_MESSAGE = 'Link copied'
 const FAILURE_MESSAGE = 'Couldn’t copy — long-press to copy'
 const SEARCH_PARAM = 'q'
-const TAG_PARAM = 'tag'
+const TAGS_PARAM = 'tags'
+const LEGACY_TAG_PARAM = 'tag'
 
 function buildExperimentsBackHref(queryString: string): string {
   const sourceParams = new URLSearchParams(queryString)
@@ -25,11 +26,22 @@ function buildExperimentsBackHref(queryString: string): string {
     nextParams.set(SEARCH_PARAM, query)
   }
 
-  sourceParams
-    .getAll(TAG_PARAM)
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0)
-    .forEach((tag) => nextParams.append(TAG_PARAM, tag))
+  const normalizedTags = Array.from(
+    new Set(
+      [
+        ...sourceParams
+          .getAll(TAGS_PARAM)
+          .flatMap((value) => value.split(',')),
+        ...sourceParams.getAll(LEGACY_TAG_PARAM),
+      ]
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0)
+    )
+  ).sort((a, b) => a.localeCompare(b))
+
+  if (normalizedTags.length > 0) {
+    nextParams.set(TAGS_PARAM, normalizedTags.join(','))
+  }
 
   const nextQueryString = nextParams.toString()
   return nextQueryString.length > 0 ? `/experiments?${nextQueryString}` : '/experiments'
