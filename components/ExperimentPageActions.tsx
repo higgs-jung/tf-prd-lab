@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { buildExperimentsBackHref } from '@/lib/experimentsQuery'
 
 type ToastState = 'success' | 'manual' | 'failure' | null
 
@@ -14,40 +15,6 @@ type ExperimentPageActionsProps = {
 const SUCCESS_MESSAGE = 'Link copied'
 const MANUAL_MESSAGE = 'Clipboard unavailable — copy link manually'
 const FAILURE_MESSAGE = 'Couldn’t copy — long-press to copy'
-const SEARCH_PARAM = 'q'
-const TAGS_PARAM = 'tags'
-const LEGACY_TAG_PARAM = 'tag'
-
-const normalizeTags = (tags: string[]) => Array.from(new Set(tags)).sort((a, b) => a.localeCompare(b))
-
-function buildExperimentsBackHref(queryString: string): string {
-  const sourceParams = new URLSearchParams(queryString)
-  const nextParams = new URLSearchParams()
-
-  const query = sourceParams.get(SEARCH_PARAM)?.trim()
-  if (query && query.length > 0) {
-    nextParams.set(SEARCH_PARAM, query)
-  }
-
-  const tags = normalizeTags([
-    ...sourceParams
-      .getAll(TAGS_PARAM)
-      .flatMap((value) => value.split(','))
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0),
-    ...sourceParams
-      .getAll(LEGACY_TAG_PARAM)
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0),
-  ])
-
-  if (tags.length > 0) {
-    nextParams.set(TAGS_PARAM, tags.join(','))
-  }
-
-  const nextQueryString = nextParams.toString()
-  return nextQueryString.length > 0 ? `/experiments?${nextQueryString}` : '/experiments'
-}
 
 async function copyLink(value: string): Promise<boolean> {
   if (
