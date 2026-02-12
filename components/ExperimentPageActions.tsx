@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
-type ToastState = 'success' | 'failure' | null
+type ToastState = 'success' | 'manual' | 'failure' | null
 
 type ExperimentPageActionsProps = {
   className?: string
@@ -12,10 +12,10 @@ type ExperimentPageActionsProps = {
 }
 
 const SUCCESS_MESSAGE = 'Link copied'
+const MANUAL_MESSAGE = 'Clipboard unavailable — copy link manually'
 const FAILURE_MESSAGE = 'Couldn’t copy — long-press to copy'
 const SEARCH_PARAM = 'q'
-const TAGS_PARAM = 'tags'
-const LEGACY_TAG_PARAM = 'tag'
+const TAG_PARAM = 'tag'
 
 function buildExperimentsBackHref(queryString: string): string {
   const sourceParams = new URLSearchParams(queryString)
@@ -26,22 +26,11 @@ function buildExperimentsBackHref(queryString: string): string {
     nextParams.set(SEARCH_PARAM, query)
   }
 
-  const normalizedTags = Array.from(
-    new Set(
-      [
-        ...sourceParams
-          .getAll(TAGS_PARAM)
-          .flatMap((value) => value.split(',')),
-        ...sourceParams.getAll(LEGACY_TAG_PARAM),
-      ]
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0)
-    )
-  ).sort((a, b) => a.localeCompare(b))
-
-  if (normalizedTags.length > 0) {
-    nextParams.set(TAGS_PARAM, normalizedTags.join(','))
-  }
+  sourceParams
+    .getAll(TAG_PARAM)
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
+    .forEach((tag) => nextParams.append(TAG_PARAM, tag))
 
   const nextQueryString = nextParams.toString()
   return nextQueryString.length > 0 ? `/experiments?${nextQueryString}` : '/experiments'
@@ -88,6 +77,16 @@ async function copyLink(value: string): Promise<boolean> {
   return copied
 }
 
+function fallbackManualCopy(value: string): boolean {
+  if (typeof window === 'undefined' || typeof window.prompt !== 'function') {
+    return false
+  }
+
+  // prompt gives users a guaranteed manual copy path in unsupported environments.
+  window.prompt('Copy this link:', value)
+  return true
+}
+
 export function ExperimentPageActions({
   className = 'fixed top-4 right-4 z-10 flex items-center gap-2',
   backClassName = 'px-4 py-2 bg-black/50 backdrop-blur-sm text-white rounded-lg hover:bg-black/70 transition-colors',
@@ -132,8 +131,16 @@ export function ExperimentPageActions({
       return
     }
 
-    const copied = await copyLink(window.location.href)
-    showToast(copied ? 'success' : 'failure')
+    const url = window.location.href
+    const copied = await copyLink(url)
+
+    if (copied) {
+      showToast('success')
+      return
+    }
+
+    const prompted = fallbackManualCopy(url)
+    showToast(prompted ? 'manual' : 'failure')
   }
 
   return (
@@ -153,7 +160,11 @@ export function ExperimentPageActions({
           aria-live="polite"
           className="fixed left-1/2 top-4 z-20 -translate-x-1/2 rounded-md bg-slate-900 px-3 py-2 text-sm text-white shadow-lg"
         >
-          {toastState === 'success' ? SUCCESS_MESSAGE : FAILURE_MESSAGE}
+          {toastState === 'success'
+            ? SUCCESS_MESSAGE
+            : toastState === 'manual'
+              ? MANUAL_MESSAGE
+              : FAILURE_MESSAGE}
         </div>
       )}
     </>
