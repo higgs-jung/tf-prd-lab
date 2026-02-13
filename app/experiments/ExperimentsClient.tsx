@@ -137,9 +137,13 @@ export default function ExperimentsPage() {
   const toggleTag = (tag: string) => {
     updateModeRef.current = 'push'
 
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
-    )
+    setSelectedTags((prev) => {
+      const nextTags = prev.includes(tag)
+        ? prev.filter((selected) => selected !== tag)
+        : [...prev, tag]
+
+      return normalizeTags(nextTags)
+    })
   }
 
   const clearFilters = () => {
