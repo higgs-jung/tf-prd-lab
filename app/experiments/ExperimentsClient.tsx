@@ -13,6 +13,8 @@ import {
   parseTagsFromParams,
 } from '@/lib/experimentsQuery'
 
+const TAG_TOGGLE_REPLACE_WINDOW_MS = 800
+
 const areEqualArrays = (a: string[], b: string[]) => {
   if (a.length !== b.length) return false
   return a.every((value, index) => value === b[index])
@@ -35,7 +37,6 @@ export default function ExperimentsPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
   const updateModeRef = useRef<'push' | 'replace'>('replace')
   const skipNextUrlSyncRef = useRef(false)
-  const lastTagInteractionAtRef = useRef(0)
   const lastTagInteractionAtRef = useRef(0)
 
   const deferredSearch = useDeferredValue(searchInput)
@@ -138,7 +139,10 @@ export default function ExperimentsPage() {
 
   const toggleTag = (tag: string) => {
     const now = Date.now()
-    updateModeRef.current = now - lastTagInteractionAtRef.current < 800 ? 'replace' : 'push'
+    // Rapid consecutive tag taps are treated as one intent (replace),
+    // while slower changes stay navigable via history (push).
+    updateModeRef.current =
+      now - lastTagInteractionAtRef.current < TAG_TOGGLE_REPLACE_WINDOW_MS ? 'replace' : 'push'
     lastTagInteractionAtRef.current = now
 
     setSelectedTags((prev) => {
