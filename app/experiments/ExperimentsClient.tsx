@@ -34,6 +34,7 @@ export default function ExperimentsPage() {
   const [searchInput, setSearchInput] = useState(urlSearchInput)
   const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
   const updateModeRef = useRef<'push' | 'replace'>('replace')
+  const skipNextUrlSyncRef = useRef(false)
 
   const deferredSearch = useDeferredValue(searchInput)
 
@@ -47,16 +48,30 @@ export default function ExperimentsPage() {
   )
 
   useEffect(() => {
-    if (searchInput !== urlSearchInput) {
+    const shouldSyncSearch = searchInput !== urlSearchInput
+    const shouldSyncTags = !areEqualArrays(selectedTags, urlSelectedTags)
+
+    if (!shouldSyncSearch && !shouldSyncTags) {
+      return
+    }
+
+    skipNextUrlSyncRef.current = true
+
+    if (shouldSyncSearch) {
       setSearchInput(urlSearchInput)
     }
 
-    if (!areEqualArrays(selectedTags, urlSelectedTags)) {
+    if (shouldSyncTags) {
       setSelectedTags(urlSelectedTags)
     }
   }, [searchInput, selectedTags, urlSearchInput, urlSelectedTags])
 
   useEffect(() => {
+    if (skipNextUrlSyncRef.current) {
+      skipNextUrlSyncRef.current = false
+      return
+    }
+
     const normalizedSelectedTags = normalizeTags(selectedTags)
     const trimmedSearch = searchInput.trim()
 
