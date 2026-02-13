@@ -34,7 +34,6 @@ export default function ExperimentsPage() {
   const [searchInput, setSearchInput] = useState(urlSearchInput)
   const [selectedTags, setSelectedTags] = useState<string[]>(urlSelectedTags)
   const updateModeRef = useRef<'push' | 'replace'>('replace')
-  const lastTagInteractionAtRef = useRef(0)
 
   const deferredSearch = useDeferredValue(searchInput)
 
@@ -121,9 +120,7 @@ export default function ExperimentsPage() {
   }, [deferredSearch, normalizedExperiments, selectedTags])
 
   const toggleTag = (tag: string) => {
-    const now = Date.now()
-    updateModeRef.current = now - lastTagInteractionAtRef.current < 800 ? 'replace' : 'push'
-    lastTagInteractionAtRef.current = now
+    updateModeRef.current = 'push'
 
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((selected) => selected !== tag) : [...prev, tag]
