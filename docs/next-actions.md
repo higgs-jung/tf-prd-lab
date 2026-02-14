@@ -1,204 +1,36 @@
-# Next Actions (Sandbox)
+# Next Actions
 
-## Ticket 1: Add a minimal CI placeholder ⏸️ BLOCKED
+상태 표기 규칙: `DONE` | `IN_PROGRESS` | `BLOCKED`
 
-**Priority:** P1
-**Estimated:** Small (30-60m)
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/1
+## Active First (IN_PROGRESS / BLOCKED)
 
-**Blocker:** OAuth token missing `workflow` scope - cannot push .github/workflows/smoke-test.yml
+### Ticket 6: Configure OAuth token with workflow scope for CI
+- **Status:** BLOCKED
+- **Priority:** P0
+- **Estimated:** Small (manual config, 10-15m)
+- **Issue:** https://github.com/higgs-jung/tf-prd-lab/issues/6
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/1
 
-### Acceptance Criteria
-1. ✅ Add a lightweight script under `scripts/` (e.g., `scripts/smoke.sh`) that exits 0.
-2. ⏸️ Add a GitHub Actions workflow that runs script on PRs. (File ready locally, cannot push)
-3. ✅ Keep the workflow fast (<1m) and avoid secrets.
+**Blocker:** GitHub OAuth token에 `workflow` scope가 없어 workflow 파일 push 불가
 
-### Local State
-- scripts/smoke.sh: ✅ Committed and pushed
-- .github/workflows/smoke-test.yml: ✅ Ready locally, ❌ Cannot push (workflow scope required)
-
----
-
-## Ticket 2: Scaffold Next.js app + Vercel-ready baseline ✅ DONE
-
-**Priority:** P1
-**Estimated:** Medium (1-2h)
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/2 (merged)
-
-### Acceptance Criteria
-1. ✅ Create a Next.js (App Router + TypeScript) app at repo root.
-2. ✅ Add routes: `/`, `/experiments`, `/about` (content can be minimal).
-3. ✅ Add a placeholder experiment list driven from a local file (no DB).
-4. ✅ Keep it deployable on Vercel without any secrets.
-
-### How to Validate
-- ✅ `pnpm install && pnpm dev` starts.
-- ✅ Build succeeds: `pnpm build`.
-- ✅ Visiting `/experiments` renders at least 1 placeholder experiment card.
-
-### Changes
-- Next.js 15.5.11 with App Router
-- TypeScript 5.9.3
-- Tailwind CSS 3.4.19
-- Routes: /, /experiments, /about
-- experiments/index.json for placeholder data
-- Vercel-ready (no secrets required)
-
----
-
-## Ticket 3: Add viz-001 interactive particles experiment ✅ DONE
-
-**Priority:** P1
-**Estimated:** Medium (1-2h)
-**Assignee:** worker
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/4 (merged)
-
-### 목표
-마우스/터치 인터랙션이 가능한 파티클 애니메이션 실험 추가
-
-### 구현 범위
-- `experiments/viz-001/demo.tsx`: React Client 컴포넌트 (캔버스 기반)
-- `experiments/viz-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
-- `app/experiments/viz-001/page.tsx`: 페이지 라우트 ('use client')
-- `experiments/index.ts`: viz-001 메타 등록
-
-### Done 정의
-- [x] 파티클 데모 컴포넌트 완성 (150개 파티클, 마우스 상호작용)
-- [x] 모든 파일 빌드 성공 (pnpm build)
-- [x] 태그 설정: viz, interactive, animation
-- [x] 브랜치 생성 및 Draft PR 제출
-- [x] Judge 검토 PASS 후 머지 완료
-
-### 검증 방법
-- [x] 로컬에서 `pnpm build` 실행 (에러 없음)
-- [x] Vercel Preview 배포 확인
-- [x] 데모 페이지에서 파티클 애니메이션 동작 확인
-
-### 참고
-- 빌드 에러 해결: 'use client', import 경로, TypeScript 타입
-
----
-
-## Ticket 4: Fix Vercel deployment configuration ✅ DONE
-
-**Priority:** P0 (배포 차단)
-**Estimated:** Small (30m)
-**Assignee:** worker
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/6 (merged)
-
-### 목표
-Vercel 프로덕션 배포가 실패하는 문제 해결
-
-### 문제
-```
-Error: No Output Directory named "public" found after the Build completed.
-```
-
-Next.js는 `.next` 폴더에 빌드하지만 Vercel이 `public` 폴더를 찾고 있음
-
-### 구현 범위
-- `vercel.json` 생성 또는 Vercel 프로젝트 설정 수정
-- Next.js App Router 올바른 빌드 설정:
-  - Build Command: `next build`
-  - Output Directory: `.` (또는 `.next`)
-
-### Done 정의
-- [x] vercel.json 생성 (또는 Vercel 웹에서 설정 수정)
-- [x] 로컬 빌드 성공 확인
-- [x] Vercel 프로덕션 배포 성공
-
-### 검증 방법
-- [x] Vercel 배포 로그에서 "No Output Directory" 에러 사라짐
-- [x] `/experiments/viz-001` 페이지 접근 가능
-
----
-
-## Ticket 6: Configure OAuth token with workflow scope for CI 🚧 BLOCKED
-
-**Priority:** P0 (CI 차단)
-**Estimated:** Small (manual config, 10-15m)
-**Related:** Issue #6, PR #1
-
-**Blocker:** Requires manual GitHub OAuth token configuration
-
-### Context
-- PR #1 (CI placeholder) is BLOCKED because .github/workflows/smoke-test.yml cannot be pushed
-- The smoke.sh script is ready and committed
-- The workflow YAML is ready locally but cannot be committed
-
-### Required Action
-Configure the GitHub OAuth token with `workflow` scope, then run:
+**Required Action:**
 ```bash
-git add .github/workflows/smoke-test.yml && git commit -m "ci: add GitHub Actions workflow for smoke test" && git push
+git add .github/workflows/smoke-test.yml
+git commit -m "ci: add GitHub Actions workflow for smoke test"
+git push
 ```
 
-### Note
-This requires manual GitHub account configuration, cannot be fixed by Worker code changes.
-
 ---
 
-## Ticket 7: Add weird-001 weird category experiment 🚧 IN_PROGRESS
+### Ticket 8: Fix Vercel config for Next.js
+- **Status:** IN_PROGRESS
+- **Priority:** P1
+- **Estimated:** Small (30m)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/8
 
-**Priority:** P1 (Milestone 1 실험 3/3)
-**Estimated:** Medium (1-2h)
-**Milestone:** 1 - Experiments V1 (weird category)
-**Issue:** #7
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/9
+**목표:** Vercel 배포 시 404 문제 해결 (Next.js 프레임워크 감지)
 
-### 목표
-"이상한/weird" 카테고리 실험 추가 (Milestone 1 완료)
-
-### 구현 범위
-- `experiments/weird-001/demo.tsx`: React Client 컴포넌트 (독특하고 기이한 인터랙션/시각화)
-- `experiments/weird-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
-- `app/experiments/weird-001/page.tsx`: 페이지 라우트 ('use client')
-- `experiments/index.ts`: weird-001 메타 등록
-
-### 기능 요구사항
-- 카테고리: weird (기이함/특이함 강조)
-- 인터랙티브한 요소 포함
-- 일반적인 도구/시각화와 차별화된 요소
-- 접근성 고려: 키보드 조작 가능한 기본 UI
-
-### 아이디어 (선택)
-- 중력 반전 인터랙션 ✅
-- 시간 지연 효과
-- 엔트로피 시각화
-- 기타 독창적인 아이디어
-
-### Done 정의
-- [x] weird-001 실험 컴포넌트 완성 (중력 반전 물리 시뮬레이션)
-- [x] 모든 파일 빌드 성공 (pnpm build)
-- [x] 태그 설정: weird, interactive, physics
-- [x] 브랜치 생성 및 Draft PR 제출
-
-### 검증 방법
-- [x] 로컬에서 `pnpm build` 실행 (에러 없음)
-- [x] Vercel Preview 배포 확인 (PR #9)
-- [x] 데모 페이지에서 중력 반전 동작 확인
-- [x] 마우스/터치 인터랙션 작동 확인
-
-### 참고
-- PRD 준수: 실험은 작고 독립적 (다른 실험과 의존성 없음)
-- Milestone 1 완료: viz(완료), tool(완료), weird(이번) = 3개 실험
-- 독특한/weird 요소: 중력 반전 메커니즘으로 일반 시각화와 차별화
-
----
-
-## Ticket 8: Fix Vercel config for Next.js 🚧 IN_PROGRESS
-
-**Priority:** P1 (배포 404 문제)
-**Estimated:** Small (30m)
-**PR:** #8 (DRAFT)
-
-### 목표
-Vercel 배포 시 404 문제 해결 (Next.js 프레임워크 감지)
-
-### 구현 범위
-- vercel.json에서 static outputDirectory 제거
-- framework=nextjs 설정으로 Vercel이 Next.js로 인식하게 변경
-
-### Done 정의
+**Done 정의**
 - [ ] vercel.json 수정
 - [ ] pnpm build 성공
 - [ ] Vercel 배포 404 해결
@@ -206,84 +38,68 @@ Vercel 배포 시 404 문제 해결 (Next.js 프레임워크 감지)
 
 ---
 
-## Ticket 5: Add tool-001 color picker/gradient generator experiment ✅ DONE
+### Ticket 7: Add weird-001 weird category experiment
+- **Status:** IN_PROGRESS
+- **Priority:** P1
+- **Estimated:** Medium (1-2h)
+- **Issue:** https://github.com/higgs-jung/tf-prd-lab/issues/7
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/9
+- **Milestone:** 1 - Experiments V1 (weird category)
 
-**Priority:** P1 (Milestone 1 실험 2/3)
-**Estimated:** Medium (1-2h)
-**PR:** https://github.com/higgs-ai/tf-prd-lab-20260203/pull/5 (merged)
-**Milestone:** 1 - Experiments V1 (tool category)
+**목표:** "이상한/weird" 카테고리 실험 추가 (Milestone 1 완료)
 
-### 목표
-색상 선택 및 그라데이션 생성 툴 실험 추가 (tool 카테고리)
-
-### 구현 범위
-- `experiments/tool-001/demo.tsx`: React Client 컴포넌트 (색상 선택기 + 그라데이션 프리뷰)
-- `experiments/tool-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
-- `app/experiments/tool-001/page.tsx`: 페이지 라우트 ('use client')
-- `experiments/index.ts`: tool-001 메타 등록
-
-### 기능 요구사항
-- 색상 선택기 (Color Picker) - 최소 2개 색상 지원
-- 그라데이션 방향/타입 선택 (linear/radial, 각도)
-- 실시간 CSS 코드 생성 및 복사 버튼
-- CSS 코드 출력 형식: `background: linear-gradient(...)` 또는 `background: radial-gradient(...)`
-
-### Done 정의
-- [x] 색상 선택기 컴포넌트 완성 (최소 2색, linear/radial 지원)
-- [x] 그라데이션 프리뷰 실시간 업데이트
-- [x] CSS 코드 복사 기능
+**Done 정의**
+- [x] weird-001 실험 컴포넌트 완성 (중력 반전 물리 시뮬레이션)
 - [x] 모든 파일 빌드 성공 (pnpm build)
-- [x] 태그 설정: tool, color, generator
+- [x] 태그 설정: weird, interactive, physics
 - [x] 브랜치 생성 및 Draft PR 제출
-
-### 검증 방법
-- [x] 로컬에서 `pnpm build` 실행 (에러 없음)
-- [x] Vercel Preview 배포 확인 (PR #5)
-- [x] 데모 페이지에서 색상/그라데이션 동작 확인
-- [x] CSS 코드 복사 기능 동작 확인
-
-### 참고
-- PRD 준수: 실험은 작고 독립적 (다른 실험과 의존성 없음)
-- 접근성 고려: 키보드 조작 가능한 기본 UI
-- 최대 5개 색상까지 지원
-- 빠른 프리셋 제공 (4가지 일반적인 그라데이션)
+- [ ] Judge 검토 PASS 후 머지
 
 ---
 
-## Ticket 7: Add weird-001 weird category experiment 🚧 IN_PROGRESS
+### Ticket 1: Add a minimal CI placeholder
+- **Status:** BLOCKED
+- **Priority:** P1
+- **Estimated:** Small (30-60m)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/1
 
-**Priority:** P1 (Milestone 1 실험 3/3)
-**Estimated:** Medium (1-2h)
-**Issue:** https://github.com/higgs-ai/tf-prd-lab-20260203/issues/7
-**Milestone:** 1 - Experiments V1 (weird category)
+**Blocker:** OAuth token missing `workflow` scope
 
-### 목표
-"이상한/weird" 카테고리 실험 추가 (Milestone 1 완료)
+**Local State**
+- scripts/smoke.sh: 완료 및 반영
+- .github/workflows/smoke-test.yml: 로컬 준비 완료, push 차단
 
-### 구현 범위
-- `experiments/weird-001/demo.tsx`: React Client 컴포넌트 (독특하고 기이한 인터랙션/시각화)
-- `experiments/weird-001/spec.md`: 실험 스펙 (목적, 방법, 제약)
-- `app/experiments/weird-001/page.tsx`: 페이지 라우트 ('use client')
-- `experiments/index.ts`: weird-001 메타 등록
+---
 
-### 기능 요구사항
-- 카테고리: weird (기이함/특이함 강조)
-- 인터랙티브한 요소 포함
-- 일반적인 도구/시각화와 차별화된 요소
-- 접근성 고려: 키보드 조작 가능한 기본 UI
+## Completed (DONE)
 
-### 아이디어 (선택)
-- 중력 반전 인터랙션
-- 시간 지연 효과
-- 엔트로피 시각화
-- 기타 독창적인 아이디어
+### Ticket 2: Scaffold Next.js app + Vercel-ready baseline
+- **Status:** DONE
+- **Priority:** P1
+- **Estimated:** Medium (1-2h)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/2
 
-### Done 정의
-- [ ] weird-001 실험 컴포넌트 완성
-- [ ] 모든 파일 빌드 성공 (pnpm build)
-- [ ] 태그 설정: weird, interactive
-- [ ] 브랜치 생성 및 Draft PR 제출
+---
 
-### 참고
-- PRD 준수: 실험은 작고 독립적 (다른 실험과 의존성 없음)
-- Milestone 1 완료: viz(완료), tool(완료), weird(이번) = 3개 실험
+### Ticket 3: Add viz-001 interactive particles experiment
+- **Status:** DONE
+- **Priority:** P1
+- **Estimated:** Medium (1-2h)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/4
+
+---
+
+### Ticket 4: Fix Vercel deployment configuration
+- **Status:** DONE
+- **Priority:** P0
+- **Estimated:** Small (30m)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/6
+
+---
+
+### Ticket 5: Add tool-001 color picker/gradient generator experiment
+- **Status:** DONE
+- **Priority:** P1
+- **Estimated:** Medium (1-2h)
+- **PR:** https://github.com/higgs-jung/tf-prd-lab/pull/5
+- **Milestone:** 1 - Experiments V1 (tool category)
