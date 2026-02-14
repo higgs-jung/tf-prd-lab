@@ -2,6 +2,11 @@
 
 Private sandbox repo to test the OpenClaw team workflow (Planner → Captain → Worker → Judge) with PR-based automation.
 
+## Documentation entrypoint
+
+- Start here: [docs/INDEX.md](./docs/INDEX.md)
+- Ideation SSOT: [docs/ideation/INDEX.md](./docs/ideation/INDEX.md)
+
 ## Repo healthcheck
 
 Run the lightweight repository checks locally:

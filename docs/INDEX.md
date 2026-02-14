@@ -1,6 +1,6 @@
 # Docs Index (SSOT Entry)
 
-이 문서는 tf-prd-lab의 문서 엔트리포인트입니다.
+이 문서는 tf-prd-lab 문서의 **공식 시작점(canonical entrypoint)** 입니다.
 
 ## 1) Product & Workflow SSOT
 
