@@ -15,4 +15,4 @@ What it checks:
 - local markdown links resolve
 - optional markdown lint (`markdownlint-cli2`) when available
 
-CI also runs the same check on pull requests via `.github/workflows/healthcheck.yml`.
+CI also runs the same check on pull requests and pushes to `main` via `.github/workflows/healthcheck.yml`.
