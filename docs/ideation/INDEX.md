@@ -15,6 +15,7 @@
 - Why now: 중복 Ticket(예: Ticket 7)과 상태 혼재로 실행 판단 속도가 느림.
 - Scope: 중복 제거, 상태 라벨(DONE/IN_PROGRESS/BLOCKED) 단일화, 링크 정규화.
 - Done: 티켓별 단일 상태 + 깨진 링크 0.
+- Tracking issue: [#115](https://github.com/higgs-jung/tf-prd-lab/issues/115)
 
 ### 2) Milestone snapshot 문서 추가 (`docs/STATUS.md`)
 - Why now: 신규 참여자가 현재 상태를 한 번에 파악하기 어려움.
@@ -24,6 +25,7 @@
 ## Runs
 
 - Active run template: [runs/TEMPLATE.md](./runs/TEMPLATE.md)
+- Latest run: [runs/ideation-20260216-0630.md](./runs/ideation-20260216-0630.md)
 - Archive index: [_archive/README.md](./_archive/README.md)
 - Latest archived run: [_archive/ideation-20260214-0412.md](./_archive/ideation-20260214-0412.md)
 
