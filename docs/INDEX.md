@@ -17,6 +17,10 @@
 
 - [ideation/INDEX.md](./ideation/INDEX.md) — 다음 실행용 카드 + 실행 템플릿
 
-## 4) Reference
+## 4) Status
+
+- [STATUS.md](./STATUS.md) — milestone 진행 스냅샷 (현재 상태 요약)
+
+## 5) Reference
 
 - [how-to-add-experiment.md](./how-to-add-experiment.md) — 실험 추가 방법
