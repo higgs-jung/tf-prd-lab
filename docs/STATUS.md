@@ -1,24 +1,40 @@
 # Milestone Snapshot
 
-_Last updated: 2026-02-16 (Asia/Seoul)_
+_Last updated: 2026-02-17 (Asia/Seoul)_
 
-- 현재 리포는 **문서/운영 체계는 정리됨**, 제품 구현은 일부 보류된 상태입니다.
-- 단기 우선순위는 **배포/CI 안정화**(workflow scope, Vercel 404)입니다.
-- 실험 트랙은 `weird-001`이 Draft PR 상태로 남아 있으며 리뷰/머지가 필요합니다.
-- 과거 티켓 다수는 완료되었고, 현재는 backlog 정리 이후 문서 가시성 개선 단계입니다.
-- 이번 스냅샷의 목적은 신규 참여자가 "지금 무엇이 막혀 있고 무엇이 준비됐는지"를 1분 내 파악하도록 돕는 것입니다.
+이 문서는 현재 milestone 진행 상태를 **DONE / IN_PROGRESS / BLOCKED / RISKS** 기준으로 빠르게 확인하기 위한 스냅샷입니다.
 
-## Milestone quick view
+## Core docs (quick links)
 
-| Milestone | Status | Snapshot |
-|---|---|---|
-| 운영 기반/문서 정비 | ✅ Completed | PRD/INDEX/next-actions 구조가 정리되어 실행 흐름(Planner→Captain→Worker→Judge)을 따라갈 수 있음 |
-| 실험 V1 (카테고리 실험) | 🟡 In Progress | 일부 실험은 완료되었으나 `weird-001`은 PR 리뷰 대기 |
-| 배포 안정화 | 🟡 In Progress | Vercel 404 및 CI workflow scope 이슈로 완전 자동화/안정 배포는 미완 |
-| 공개 운용 준비 | 🔴 Blocked | 상기 배포/CI 이슈 해소 전에는 신뢰 가능한 반복 릴리즈가 어려움 |
+- [PRD.md](./PRD.md)
+- [PRODUCT_PRD.md](./PRODUCT_PRD.md)
+- [next-actions.md](./next-actions.md)
+- [INDEX.md](./INDEX.md)
 
-## Immediate focus
+## 운영 기반/문서 정비
 
-1. CI workflow push 권한(scope) 문제 해소
-2. Vercel 라우팅/배포 설정 마무리
+- **DONE**: `docs/INDEX.md`를 SSOT entrypoint로 정리했고, 운영 기준 문서(`PRD.md`)와 제품 방향(`PRODUCT_PRD.md`) 분리가 완료됨.
+- **DONE**: `docs/next-actions.md` 기준으로 티켓 이력/상태를 추적하는 운영 루프가 자리잡음.
+- **IN_PROGRESS**: 문서 간 상호 링크와 최신성(최근 이슈/PR 반영) 유지 작업은 지속 필요.
+- **BLOCKED**: 구조 자체를 막는 블로커는 현재 없음.
+- **RISKS**: 문서 업데이트가 실작업 속도를 못 따라가면 상태 불일치가 누적될 수 있음.
+
+## 실험 V1 (카테고리 실험)
+
+- **DONE**: 실험 트랙/문서 템플릿이 정의되어 신규 실험 추가 경로는 확보됨.
+- **IN_PROGRESS**: 일부 실험 결과가 PR 기준으로 정리 중이며, 리뷰-머지 완료가 필요함.
+- **BLOCKED**: 배포/CI 신뢰도 이슈가 남아 실험 결과를 안정적으로 릴리즈하기 어려움.
+- **RISKS**: Draft/대기 PR이 길어질수록 실험 결과의 최신성·재현성이 낮아질 수 있음.
+
+## 배포 안정화
+
+- **DONE**: 문제 구간(Workflow scope, Vercel 404)이 식별되어 대응 포인트는 명확함.
+- **IN_PROGRESS**: CI workflow 권한/트리거 정비 및 Vercel 라우팅 점검 진행 중.
+- **BLOCKED**: 위 이슈 해소 전에는 자동 배포 파이프라인을 신뢰하기 어려움.
+- **RISKS**: 릴리즈 지연으로 운영 피드백 루프가 느려지고, 문서 상태와 실제 배포 상태 괴리가 커질 수 있음.
+
+## Immediate focus (next)
+
+1. CI workflow scope/권한 이슈 해결
+2. Vercel 라우팅·배포 설정 확정
 3. 열려 있는 실험 PR 리뷰/머지로 상태 정합성 회복
