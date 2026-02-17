@@ -19,7 +19,7 @@
 
 ## 4) Status
 
-- [STATUS.md](./STATUS.md) — milestone 진행 스냅샷 (현재 상태 요약, 1-click)
+- [STATUS.md](./STATUS.md) — milestone별 DONE / IN_PROGRESS / BLOCKED / RISKS 스냅샷 (1-click)
 
 ## 5) Reference
 
