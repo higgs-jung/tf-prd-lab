@@ -11,26 +11,26 @@
 
 ## Recently Completed Cards
 
+- [#127](https://github.com/higgs-jung/tf-prd-lab/issues/127) — deterministic "today's experiment" section resolution → merged via [PR #128](https://github.com/higgs-jung/tf-prd-lab/pull/128)
+- [#125](https://github.com/higgs-jung/tf-prd-lab/issues/125) — ideation INDEX + next-actions refresh after recent merges → merged via [PR #126](https://github.com/higgs-jung/tf-prd-lab/pull/126)
 - [#123](https://github.com/higgs-jung/tf-prd-lab/issues/123) — docs reconcile (`docs/next-actions.md` + `docs/STATUS.md`) → merged via [PR #124](https://github.com/higgs-jung/tf-prd-lab/pull/124)
-- [#115](https://github.com/higgs-jung/tf-prd-lab/issues/115) — backlog hygiene (`docs/next-actions.md` status/link cleanup) → merged via [PR #116](https://github.com/higgs-jung/tf-prd-lab/pull/116)
 
 ## Next 1–2 Actions (Pick One)
 
-### 1) Close current docs sync loop (#125)
-- Why now: 현재 오픈 이슈가 #125 1건이며, 문서 포인터 최신화가 완료되면 backlog 탐색 지연을 줄일 수 있음.
-- Scope: `docs/next-actions.md`, `docs/ideation/INDEX.md`, run 1개, `.state.json` 동기화.
-- Done: 이슈 #125 머지 완료 + 문서 간 포인터 불일치 0.
-- Tracking issue: [#125](https://github.com/higgs-jung/tf-prd-lab/issues/125)
-
-### 2) Next product-facing ticket 1건 발행
-- Why now: 문서 정리 이슈가 거의 마무리 단계라, 다음 구현 사이클 진입을 위한 실행 단위 확보가 필요함.
+### 1) Open next product-facing implementation issue (Small)
+- Why now: 현재 오픈 Issue/PR가 없어 다음 실행 사이클 진입을 위한 작업 단위가 필요함.
 - Scope: `docs/PRD.md`/`docs/PRODUCT_PRD.md` 기준으로 Small 사이즈 이슈 1건 정의.
 - Done: Assignee/DoD가 명확한 새 이슈 1건 생성.
+
+### 2) Keep docs pointers warm after first new issue lands
+- Why now: 새 이슈 생성 직후 `next-actions`/`INDEX` 정합성을 유지하면 탐색 비용을 줄일 수 있음.
+- Scope: 이슈 번호/상태/링크를 `docs/next-actions.md`와 본 문서에 즉시 반영.
+- Done: 문서 간 상태 불일치 0 유지.
 
 ## Runs
 
 - Active run template: [runs/TEMPLATE.md](./runs/TEMPLATE.md)
-- Latest run: [runs/ideation-20260218-1951.md](./runs/ideation-20260218-1951.md)
+- Latest run: [runs/ideation-20260219-0458.md](./runs/ideation-20260219-0458.md)
 - Archive index: [_archive/README.md](./_archive/README.md)
 - Latest archived run: [_archive/ideation-20260214-0412.md](./_archive/ideation-20260214-0412.md)
 
