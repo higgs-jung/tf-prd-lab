@@ -1,6 +1,6 @@
 # Next Actions
 
-_Last updated: 2026-02-18 19:51 (Asia/Seoul)_
+_Last updated: 2026-02-19 04:58 (Asia/Seoul)_
 
 상태 라벨 표준: `DONE` | `IN_PROGRESS` | `BLOCKED`
 
@@ -11,19 +11,19 @@ _Last updated: 2026-02-18 19:51 (Asia/Seoul)_
 
 ## Active (IN_PROGRESS / BLOCKED)
 
-### Ticket 125 — ideation INDEX + next-actions refresh after recent merges
-- **Status:** IN_PROGRESS
-- **Priority:** P0
-- **Estimated:** Small (10–20m)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/125>
-- **PR:** (to be created)
-- **DoD:**
-  - [ ] `docs/next-actions.md`에서 Ticket 123을 DONE으로 정리
-  - [ ] `docs/ideation/INDEX.md` Next 1–2 Actions 및 Latest run 포인터 갱신
-  - [ ] `docs/ideation/runs/` run 1개 추가 + `.state.json` cooldown 갱신
-  - [ ] Judge PASS 후 머지
+- 현재 오픈 작업 없음.
 
 ## Completed (DONE)
+
+### Ticket 127 — deterministic "today's experiment" section resolution
+- **Status:** DONE
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/127> (closed)
+- **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/128> (merged)
+
+### Ticket 125 — ideation INDEX + next-actions refresh after recent merges
+- **Status:** DONE
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/125> (closed)
+- **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/126> (merged)
 
 ### Ticket 123 — Docs: reconcile docs/next-actions.md + STATUS with actual repo state
 - **Status:** DONE
@@ -58,5 +58,5 @@ _Last updated: 2026-02-18 19:51 (Asia/Seoul)_
 - **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/9> (merged)
 
 ## Notes
-- 현재 저장소의 오픈 작업은 Issue #125 1건이며, 오픈 PR은 없음. (작성 시점 기준)
-- Ticket 123은 PR #124 머지로 종료되었고, 본 문서에서 DONE으로 이관함.
+- 현재 저장소의 오픈 Issue/PR 없음. (작성 시점 기준)
+- Ticket 125(#126), Ticket 127(#128) 모두 머지 완료되어 DONE으로 이관함.
