@@ -3,20 +3,17 @@
 import Link from "next/link";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { experiments, Experiment } from "../experiments/index";
+import { getDeterministicExperimentByDate } from "../lib/todays-experiment";
 
-// Get today's experiment based on date (consistent for 24 hours)
-function getTodaysExperiment(): Experiment {
-  const today = new Date();
-  const dayOfYear = Math.floor(
-    (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const index = dayOfYear % experiments.length;
-  return experiments[index];
+// Get today's experiment based on local date (consistent for 24 hours)
+function getTodaysExperiment(): Experiment | null {
+  return getDeterministicExperimentByDate(experiments);
 }
 
 // Get a random experiment different from current
-function getRandomExperiment(currentId: string): Experiment {
-  const others = experiments.filter(e => e.id !== currentId);
+function getRandomExperiment(currentId: string): Experiment | null {
+  const others = experiments.filter((e) => e.id !== currentId);
+  if (others.length === 0) return null;
   return others[Math.floor(Math.random() * others.length)];
 }
 
@@ -29,10 +26,13 @@ export default function Home() {
   }, []);
 
   const handleRandomPick = useCallback(() => {
-    if (todaysExperiment) {
-      setTodaysExperiment(getRandomExperiment(todaysExperiment.id));
-      setIsRandom(true);
-    }
+    if (!todaysExperiment) return;
+
+    const nextExperiment = getRandomExperiment(todaysExperiment.id);
+    if (!nextExperiment) return;
+
+    setTodaysExperiment(nextExperiment);
+    setIsRandom(true);
   }, [todaysExperiment]);
 
   const handleResetToToday = useCallback(() => {
