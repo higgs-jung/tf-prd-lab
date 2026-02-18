@@ -1,75 +1,56 @@
 # Next Actions
 
+_Last updated: 2026-02-18 16:22 (Asia/Seoul)_
+
 상태 라벨 표준: `DONE` | `IN_PROGRESS` | `BLOCKED`
+
+링크 표기 규칙:
+- **Issue:** GitHub Issue 링크 (`/issues/{number}`)
+- **PR:** GitHub Pull Request 링크 (`/pull/{number}`)
+- Ticket에 따라 Issue가 없고 PR만 존재할 수 있음(초기 티켓).
 
 ## Active (IN_PROGRESS / BLOCKED)
 
-### Ticket 1 — CI workflow push unblock (`workflow` scope)
-- **Status:** BLOCKED
+### Ticket 123 — docs state reconcile (this task)
+- **Status:** IN_PROGRESS
 - **Priority:** P0
-- **Estimated:** Small (10–15m)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/1>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/1>
-- **Blocker:** GitHub OAuth token에 `workflow` scope 없음
-- **Next step:** scope 추가 후 workflow 커밋/푸시 재시도
-
-### Ticket 8 — Vercel config for Next.js 404 fix
-- **Status:** IN_PROGRESS
-- **Priority:** P1
-- **Estimated:** Small (30m)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/8>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/8>
+- **Estimated:** Small (10–20m)
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/123>
+- **PR:** (to be created)
 - **DoD:**
-  - [ ] vercel.json 수정
-  - [ ] `pnpm build` 성공
-  - [ ] Vercel 404 해결
-  - [ ] 리뷰 PASS 후 머지
-
-### Ticket 7 — weird-001 weird category experiment
-- **Status:** IN_PROGRESS
-- **Priority:** P1
-- **Estimated:** Medium (1–2h)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/7>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/9>
-- **Milestone:** 1 - Experiments V1 (weird category)
-- **DoD:**
-  - [x] weird-001 실험 컴포넌트 완성
-  - [x] 빌드 성공 (`pnpm build`)
-  - [x] 태그 설정 완료
-  - [x] Draft PR 제출
-  - [ ] 리뷰 PASS 후 머지
+  - [ ] `docs/next-actions.md` 상태/링크 정합성 반영
+  - [ ] `docs/STATUS.md` milestone별 IN_PROGRESS/BLOCKED 사실 기반 갱신
+  - [ ] Judge PASS 후 머지
 
 ## Completed (DONE)
 
+### Ticket 1 — CI workflow push unblock (`workflow` scope)
+- **Status:** DONE
+- **Tracking PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/1> (closed)
+- **Note:** Issue가 아닌 PR 기반으로 추적된 초기 티켓
+
 ### Ticket 2 — Next.js baseline scaffold
 - **Status:** DONE
-- **Priority:** P1
-- **Estimated:** Medium (1–2h)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/2>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/2>
+- **Tracking PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/2> (merged)
 
 ### Ticket 3 — viz-001 interactive particles
 - **Status:** DONE
-- **Priority:** P1
-- **Estimated:** Medium (1–2h)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/3>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/4>
+- **Tracking PR (closed superseded):** <https://github.com/higgs-jung/tf-prd-lab/pull/3> (closed)
+- **Final implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/4> (merged)
 
 ### Ticket 4 — Vercel deployment configuration
 - **Status:** DONE
-- **Priority:** P0
-- **Estimated:** Small (30m)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/4>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/6>
+- **Tracking PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/8> (merged)
 
 ### Ticket 5 — tool-001 color picker / gradient generator
 - **Status:** DONE
-- **Priority:** P1
-- **Estimated:** Medium (1–2h)
-- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/5>
-- **PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/5>
-- **Milestone:** 1 - Experiments V1 (tool category)
+- **Tracking PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/5> (merged)
+
+### Ticket 7 — weird-001 weird category experiment
+- **Status:** DONE
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/7> (closed)
+- **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/9> (merged)
 
 ## Notes
-- 중복 항목 정리: 기존 Ticket 6(Workflow scope 설정)은 Ticket 1의 blocker/next-step에 병합함.
-- 링크 형식 정규화: GitHub 링크를 angle bracket (`<...>`) 형태로 통일.
+- 기존 문서의 Ticket 1/8은 **Issue 링크처럼 보였지만 실제로는 PR 링크**였음. 현재는 `Tracking PR`로 명시.
+- 현재 저장소의 오픈 작업은 Issue #123 1건이며, 오픈 PR은 없음.
