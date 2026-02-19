@@ -6,7 +6,7 @@ Private sandbox repo to test the OpenClaw team workflow (Planner → Captain →
 
 - Start here: [docs/INDEX.md](./docs/INDEX.md)
 - Ideation SSOT: [docs/ideation/INDEX.md](./docs/ideation/INDEX.md)
-- Project overview: [About page](/about)
+- Project overview (local): [http://localhost:3000/about](http://localhost:3000/about)
 
 ## Repo healthcheck
 
