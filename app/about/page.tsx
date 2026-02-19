@@ -2,8 +2,9 @@ import Link from "next/link";
 
 const principles = [
   "Start small: every idea ships as a focused experiment.",
+  "PR-first changes: code lands through review, never direct pushes to main.",
+  "No external keys or secrets in experiments, code, or commits.",
   "Learn fast: measure what users do, not what we hope.",
-  "Keep it transparent: work happens in issues and PRs.",
   "Ship safely: iterate behind clear review gates.",
 ];
 
