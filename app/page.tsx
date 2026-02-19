@@ -128,18 +128,24 @@ export default function Home() {
         </section>
 
         {/* Navigation */}
-        <nav className="flex gap-4 mb-8">
+        <nav className="mb-8 flex flex-wrap gap-4">
           <Link
             href="/experiments"
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="rounded-lg bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700"
           >
             View All Experiments
           </Link>
           <Link
             href="/about"
-            className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            className="rounded-lg bg-gray-200 px-6 py-3 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             About
+          </Link>
+          <Link
+            href="/changelog"
+            className="rounded-lg bg-gray-200 px-6 py-3 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600"
+          >
+            Changelog
           </Link>
         </nav>
 
@@ -165,6 +171,7 @@ export default function Home() {
           <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
             <li>Try the <strong>오늘의 실험</strong> (Today&apos;s Experiment) above</li>
             <li>Browse all <Link href="/experiments" className="text-blue-600 dark:text-blue-400 hover:underline">Experiments</Link></li>
+            <li>Check recent updates in <Link href="/changelog" className="text-blue-600 dark:text-blue-400 hover:underline">Changelog</Link></li>
             <li>Learn more <Link href="/about" className="text-blue-600 dark:text-blue-400 hover:underline">About</Link> this project</li>
           </ul>
         </div>
