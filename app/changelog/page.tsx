@@ -7,6 +7,7 @@ type ChangelogLink = {
 
 type ChangelogItem = {
   date: string;
+  title: string;
   summary: string;
   links?: ChangelogLink[];
 };
@@ -14,6 +15,7 @@ type ChangelogItem = {
 const changelogItems: ChangelogItem[] = [
   {
     date: "2026-02-20",
+    title: "404 복귀 동선 보강",
     summary: "커스텀 404(not-found) 페이지를 추가해 잘못된 경로 접근 시 복귀 경로를 명확히 안내합니다.",
     links: [
       { type: "PR", number: 137 },
@@ -22,21 +24,25 @@ const changelogItems: ChangelogItem[] = [
   },
   {
     date: "2026-02-19",
+    title: "About 페이지 정보 구조 개선",
     summary: "About 페이지를 간결하게 정리해 프로젝트 정체성과 운영 맥락을 빠르게 파악할 수 있게 개선했습니다.",
     links: [{ type: "PR", number: 131 }],
   },
   {
     date: "2026-02-19",
+    title: "문서 상태 동기화",
     summary: "next-actions / ideation 문서를 실제 GitHub 상태와 맞추어 업데이트해 작업 추적 가독성을 높였습니다.",
     links: [{ type: "PR", number: 129 }],
   },
   {
     date: "2026-02-19",
+    title: "실험 노출 일관성 강화",
     summary: "오늘의 실험을 날짜 기반 seed로 결정해 하루 동안 일관된 실험 카드가 노출되도록 했습니다.",
     links: [{ type: "PR", number: 128 }],
   },
   {
     date: "2026-02-18",
+    title: "운영 문서 흐름 정리",
     summary: "문서 흐름(STATUS/next-actions)을 정리해 Planner→Captain→Worker 운영 루프와 최신 상태를 동기화했습니다.",
     links: [
       { type: "PR", number: 126 },
@@ -61,6 +67,11 @@ function buildGithubLink(link: ChangelogLink) {
   };
 }
 
+function formatDate(date: string) {
+  const [year, month, day] = date.split("-");
+  return `${year}.${month}.${day}`;
+}
+
 export default function ChangelogPage() {
   return (
     <main className="min-h-screen p-8">
@@ -79,13 +90,17 @@ export default function ChangelogPage() {
               <li key={`${item.date}-${index}`}>
                 <article className="rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800/40">
                   <div className="flex flex-wrap items-center gap-2 text-sm">
-                    <span className="rounded-full bg-gray-100 px-2.5 py-1 font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                      {item.date}
-                    </span>
+                    <time
+                      dateTime={item.date}
+                      className="rounded-full bg-gray-100 px-2.5 py-1 font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                    >
+                      {formatDate(item.date)}
+                    </time>
                     <span className="text-gray-500 dark:text-gray-400">업데이트</span>
                   </div>
 
-                  <p className="mt-3 text-base leading-relaxed text-gray-800 dark:text-gray-100">{item.summary}</p>
+                  <h2 className="mt-3 text-lg font-semibold text-gray-900 dark:text-gray-50">{item.title}</h2>
+                  <p className="mt-2 text-base leading-relaxed text-gray-800 dark:text-gray-100">{item.summary}</p>
 
                   {item.links && item.links.length > 0 ? (
                     <ul className="mt-3 flex flex-wrap gap-2" aria-label="관련 PR 및 이슈">
