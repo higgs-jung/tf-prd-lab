@@ -1,111 +1,87 @@
 import Link from "next/link";
 
-const mergedPrs = [
-  {
-    number: 131,
-    title: "feat: add concise About page for Geek Lab",
-    mergedAt: "2026-02-19",
-    url: "https://github.com/higgs-jung/tf-prd-lab/pull/131",
-  },
-  {
-    number: 129,
-    title: "docs: reconcile next-actions/ideation after #125 closure and #127 merge",
-    mergedAt: "2026-02-19",
-    url: "https://github.com/higgs-jung/tf-prd-lab/pull/129",
-  },
-  {
-    number: 128,
-    title: "feat: deterministic 오늘의 실험 selection (date-seeded)",
-    mergedAt: "2026-02-19",
-    url: "https://github.com/higgs-jung/tf-prd-lab/pull/128",
-  },
-  {
-    number: 126,
-    title: "docs: refresh next-actions + ideation index after #123 merge (#125)",
-    mergedAt: "2026-02-18",
-    url: "https://github.com/higgs-jung/tf-prd-lab/pull/126",
-  },
-  {
-    number: 124,
-    title: "docs: reconcile next-actions/STATUS with actual GitHub state (#123)",
-    mergedAt: "2026-02-18",
-    url: "https://github.com/higgs-jung/tf-prd-lab/pull/124",
-  },
-];
+type ChangelogItem = {
+  date: string;
+  summary: string;
+  links: Array<{ label: string; href: string }>;
+};
 
-const operatingNotes = [
-  "Ship small PRs and merge frequently.",
-  "Keep experiments isolated and easy to roll back.",
-  "Prioritize clear docs so contributors can move fast.",
-  "Prefer deterministic behavior in user-facing daily picks.",
-];
-
-const usefulLinks = [
-  { label: "Repository", href: "https://github.com/higgs-jung/tf-prd-lab" },
-  { label: "Open Issues", href: "https://github.com/higgs-jung/tf-prd-lab/issues" },
-  { label: "Open Pull Requests", href: "https://github.com/higgs-jung/tf-prd-lab/pulls" },
-  { label: "Project README", href: "https://github.com/higgs-jung/tf-prd-lab/blob/main/README.md" },
+const changelogItems: ChangelogItem[] = [
+  {
+    date: "2026-02-20",
+    summary: "커스텀 404(not-found) 페이지를 추가해 잘못된 경로 접근 시 복귀 경로를 명확히 안내합니다.",
+    links: [
+      { label: "PR #137", href: "https://github.com/higgs-jung/tf-prd-lab/pull/137" },
+      { label: "Issue #136", href: "https://github.com/higgs-jung/tf-prd-lab/issues/136" },
+    ],
+  },
+  {
+    date: "2026-02-19",
+    summary: "About 페이지를 간결하게 정리해 프로젝트 정체성과 운영 맥락을 빠르게 파악할 수 있게 개선했습니다.",
+    links: [{ label: "PR #131", href: "https://github.com/higgs-jung/tf-prd-lab/pull/131" }],
+  },
+  {
+    date: "2026-02-19",
+    summary: "next-actions / ideation 문서를 실제 GitHub 상태와 맞추어 업데이트해 작업 추적 가독성을 높였습니다.",
+    links: [{ label: "PR #129", href: "https://github.com/higgs-jung/tf-prd-lab/pull/129" }],
+  },
+  {
+    date: "2026-02-19",
+    summary: "오늘의 실험을 날짜 기반 seed로 결정해 하루 동안 일관된 실험 카드가 노출되도록 했습니다.",
+    links: [{ label: "PR #128", href: "https://github.com/higgs-jung/tf-prd-lab/pull/128" }],
+  },
+  {
+    date: "2026-02-18",
+    summary: "문서 흐름(STATUS/next-actions)을 정리해 Planner→Captain→Worker 운영 루프와 최신 상태를 동기화했습니다.",
+    links: [
+      { label: "PR #126", href: "https://github.com/higgs-jung/tf-prd-lab/pull/126" },
+      { label: "PR #124", href: "https://github.com/higgs-jung/tf-prd-lab/pull/124" },
+    ],
+  },
 ];
 
 export default function ChangelogPage() {
   return (
     <main className="min-h-screen p-8">
-      <div className="mx-auto max-w-4xl space-y-10">
-        <header>
-          <h1 className="mb-3 text-4xl font-bold">Changelog</h1>
+      <div className="mx-auto max-w-4xl space-y-8">
+        <header className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Project updates</p>
+          <h1 className="text-4xl font-bold">Changelog</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Lightweight project updates: recent merged pull requests, operating notes, and quick links.
+            날짜 · 요약 · 링크 중심으로 최근 변경사항을 빠르게 스캔할 수 있도록 정리했습니다.
           </p>
         </header>
 
-        <section>
-          <h2 className="mb-4 text-2xl font-semibold">Recent merged pull requests</h2>
-          <ul className="space-y-3">
-            {mergedPrs.map((pr) => (
-              <li key={pr.number} className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-                <a
-                  href={pr.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  #{pr.number} · {pr.title}
-                </a>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Merged: {pr.mergedAt}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="mb-4 text-2xl font-semibold">Operating notes</h2>
-          <ul className="list-disc space-y-2 pl-6 text-gray-700 dark:text-gray-300">
-            {operatingNotes.map((note) => (
-              <li key={note}>{note}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="mb-4 text-2xl font-semibold">Useful links</h2>
-          <ul className="space-y-2">
-            {usefulLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <section className="space-y-4">
+          {changelogItems.map((item, index) => (
+            <article
+              key={`${item.date}-${index}`}
+              className="rounded-2xl border border-gray-200 bg-white/80 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800/40"
+            >
+              <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">{item.date}</p>
+              <p className="mt-2 text-base leading-relaxed text-gray-800 dark:text-gray-100">{item.summary}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {item.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm text-blue-700 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))}
         </section>
 
         <div>
-          <Link href="/" className="text-sm text-gray-600 underline underline-offset-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+          <Link
+            href="/"
+            className="text-sm text-gray-600 underline underline-offset-2 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+          >
             ← Back to home
           </Link>
         </div>
