@@ -24,3 +24,4 @@
 ## 5) Reference
 
 - [how-to-add-experiment.md](./how-to-add-experiment.md) — 실험 추가 방법
+- [changelog-entry-guide.md](./changelog-entry-guide.md) — changelog 항목 작성 규칙(날짜/요약/링크)
