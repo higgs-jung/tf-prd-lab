@@ -76,11 +76,21 @@ export default function ChangelogPage() {
   return (
     <main className="min-h-screen p-8">
       <div className="mx-auto max-w-4xl space-y-8">
-        <header className="space-y-2">
+        <header className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Project updates</p>
           <h1 className="text-4xl font-bold">Changelog</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
             날짜 · 요약 · 관련 링크를 같은 카드 구조로 고정해 최근 변경사항을 빠르게 읽을 수 있게 정리했습니다.
+          </p>
+          <p>
+            <a
+              href="https://github.com/higgs-jung/tf-prd-lab/blob/main/docs/changelog-entry-guide.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
+            >
+              changelog 작성 가이드 보기
+            </a>
           </p>
         </header>
 
