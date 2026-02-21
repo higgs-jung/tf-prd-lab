@@ -109,6 +109,13 @@ export default function Home() {
               Try It Now →
             </Link>
 
+            <Link
+              href="/changelog"
+              className="px-6 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+            >
+              최근 업데이트 보기
+            </Link>
+
             <button
               onClick={handleRandomPick}
               className="px-6 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
