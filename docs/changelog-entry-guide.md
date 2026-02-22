@@ -2,6 +2,8 @@
 
 `/changelog` 페이지의 카드 형식을 유지하기 위한 작성 규칙입니다.
 
+👉 최신 변경 내역은 [`/changelog`](http://localhost:3000/changelog)에서 확인하세요.
+
 - 대상 파일: `app/changelog/page.tsx`
 - 대상 타입: `ChangelogItem`
 
