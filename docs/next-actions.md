@@ -1,6 +1,6 @@
 # Next Actions
 
-_Last updated: 2026-02-19 04:58 (Asia/Seoul)_
+_Last updated: 2026-02-22 11:15 (Asia/Seoul)_
 
 상태 라벨 표준: `DONE` | `IN_PROGRESS` | `BLOCKED`
 
@@ -11,9 +11,16 @@ _Last updated: 2026-02-19 04:58 (Asia/Seoul)_
 
 ## Active (IN_PROGRESS / BLOCKED)
 
-- 현재 오픈 작업 없음.
+### Ticket 149 — docs: next-actions/STATUS 최신화 (오픈 티켓 0 반영)
+- **Status:** IN_PROGRESS
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/149>
 
 ## Completed (DONE)
+
+### Ticket 138 — /changelog 가독성 개선
+- **Status:** DONE
+- **Issue:** <https://github.com/higgs-jung/tf-prd-lab/issues/138> (closed)
+- **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/139> (merged)
 
 ### Ticket 127 — deterministic "today's experiment" section resolution
 - **Status:** DONE
@@ -58,5 +65,6 @@ _Last updated: 2026-02-19 04:58 (Asia/Seoul)_
 - **Implementation PR:** <https://github.com/higgs-jung/tf-prd-lab/pull/9> (merged)
 
 ## Notes
-- 현재 저장소의 오픈 Issue/PR 없음. (작성 시점 기준)
-- Ticket 125(#126), Ticket 127(#128) 모두 머지 완료되어 DONE으로 이관함.
+- 현재 오픈 Issue: #149 1건 (본 문서/STATUS 정합성 업데이트).
+- 현재 오픈 PR: 0건.
+- Ticket 138(#139)은 머지/이슈 closed 상태를 반영해 DONE으로 이관함.
